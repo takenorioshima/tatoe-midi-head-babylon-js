@@ -14,8 +14,8 @@ class App {
     document.body.appendChild(canvas);
 
     // initialize babylon scene and engine
-    var engine = new Engine(canvas, true);
-    var scene = new Scene(engine);
+    const engine = new Engine(canvas, true);
+    const scene = new Scene(engine);
 
     const camera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 3, Vector3.Zero(), scene);
     camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
@@ -23,9 +23,9 @@ class App {
     camera.attachControl(canvas, true);
     camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
 
-    var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
     var box = MeshBuilder.CreateBox("box", { size: 1 }, scene);
     box.material = new NormalMaterial("normal", scene);
+    const light: HemisphericLight = new HemisphericLight("light", new Vector3(1, 1, 0), scene);
 
     // hide/show the Inspector
     window.addEventListener("keydown", (ev) => {
