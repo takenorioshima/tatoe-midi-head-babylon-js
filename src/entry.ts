@@ -7,9 +7,9 @@ import { Engine, Scene, Camera, ArcRotateCamera, Vector3, HemisphericLight, Mesh
 class App {
   constructor() {
     // create the canvas html element and attach it to the webpage
-    var canvas = document.createElement("canvas");
-    canvas.style.width = "100vw";
-    canvas.style.height = "100vh";
+    const canvas = document.createElement("canvas");
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
     canvas.id = "main-canvas";
     document.body.appendChild(canvas);
 
