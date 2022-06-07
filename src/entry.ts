@@ -17,10 +17,11 @@ class App {
     var engine = new Engine(canvas, true);
     var scene = new Scene(engine);
 
-    var camera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, Vector3.Zero(), scene);
+    const camera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 3, Vector3.Zero(), scene);
     camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
     camera.setTarget(Vector3.Zero());
     camera.attachControl(canvas, true);
+    camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
 
     var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
     var box = MeshBuilder.CreateBox("box", { size: 1 }, scene);
@@ -53,6 +54,7 @@ class App {
     // run the main render loop
     engine.runRenderLoop(() => {
       scene.render();
+      camera.alpha += 0.005;
     });
 
   }
