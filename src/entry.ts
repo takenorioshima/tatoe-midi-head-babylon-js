@@ -1,7 +1,6 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
-import "@babylonjs/loaders/glTF";
-import { NormalMaterial } from "@babylonjs/materials/normal"
+import Tatoe from "./tatoe"
 import { Engine, Scene, Camera, ArcRotateCamera, Vector3, HemisphericLight, MeshBuilder } from "@babylonjs/core";
 
 class App {
@@ -23,9 +22,9 @@ class App {
     camera.attachControl(canvas, true);
     camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
 
-    var box = MeshBuilder.CreateBox("box", { size: 1 }, scene);
-    box.material = new NormalMaterial("normal", scene);
     const light: HemisphericLight = new HemisphericLight("light", new Vector3(1, 1, 0), scene);
+
+    const tatoe = new Tatoe(scene);
 
     // hide/show the Inspector
     window.addEventListener("keydown", (ev) => {
