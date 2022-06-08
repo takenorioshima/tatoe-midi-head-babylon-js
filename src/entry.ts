@@ -40,13 +40,14 @@ class App {
     });
 
     const onResize = () => {
+      const zoom = 4;
       const rect = engine.getRenderingCanvasClientRect();
       const aspect = rect.height / rect.width;
       // In this example we'll set the distance based on the camera's radius.
-      camera.orthoLeft = -camera.radius;
-      camera.orthoRight = camera.radius;
-      camera.orthoBottom = -camera.radius * aspect;
-      camera.orthoTop = camera.radius * aspect;
+      camera.orthoLeft = -camera.radius / zoom;
+      camera.orthoRight = camera.radius / zoom;
+      camera.orthoBottom = -camera.radius * aspect / zoom;
+      camera.orthoTop = camera.radius * aspect / zoom;
     }
     onResize();
     window.addEventListener('resize', onResize);
