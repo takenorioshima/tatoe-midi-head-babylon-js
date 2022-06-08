@@ -27,7 +27,7 @@ class App {
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
     const tatoe = new Tatoe(scene);
-    const animation = new Animation(tatoe, scene);
+    const animation = new Animation(tatoe, scene, camera, engine);
 
     // hide/show the Inspector
     window.addEventListener("keydown", (ev) => {
@@ -45,7 +45,6 @@ class App {
       const zoom = 4;
       const rect = engine.getRenderingCanvasClientRect();
       const aspect = rect.height / rect.width;
-      // In this example we'll set the distance based on the camera's radius.
       camera.orthoLeft = -camera.radius / zoom;
       camera.orthoRight = camera.radius / zoom;
       camera.orthoBottom = -camera.radius * aspect / zoom;

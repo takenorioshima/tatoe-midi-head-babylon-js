@@ -5,7 +5,7 @@ export default class Animation {
 
   backgroundColorsIndex: number;
 
-  constructor(public tatoe: Tatoe, public scene: BABYLON.Scene) {
+  constructor(public tatoe: Tatoe, public scene: BABYLON.Scene, public camera: BABYLON.ArcRotateCamera, public engine: BABYLON.Engine) {
 
     this.backgroundColorsIndex = 0;
 
@@ -13,6 +13,9 @@ export default class Animation {
       console.log(e);
       if (e.code === "KeyB") {
         this.changeBackgroundColor();
+      }
+      if (e.code === "KeyC") {
+        this.changeCameraPosition();
       }
     });
   }
@@ -24,5 +27,20 @@ export default class Animation {
     if (this.backgroundColorsIndex >= backgroundColors.length) {
       this.backgroundColorsIndex = 0;
     }
+  }
+
+  changeCameraPosition() {
+    const alpha = Math.random() * Math.PI * 2;
+    const beta = Math.random() * Math.PI;
+    this.camera.alpha = alpha;
+    this.camera.beta = beta;
+
+    const zoom = Math.random() * 2 + 3;
+    const rect = this.engine.getRenderingCanvasClientRect();
+    const aspect = rect.height / rect.width;
+    this.camera.orthoLeft = -this.camera.radius / zoom;
+    this.camera.orthoRight = this.camera.radius / zoom;
+    this.camera.orthoBottom = -this.camera.radius * aspect / zoom;
+    this.camera.orthoTop = this.camera.radius * aspect / zoom;
   }
 }
