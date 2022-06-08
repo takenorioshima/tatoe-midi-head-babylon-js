@@ -47,7 +47,10 @@ export default class Tatoe {
       .then((result) => {
         this.take = result.meshes[0];
         this.take.position = new BABYLON.Vector3(0.375, -0.1, 0);
-        this.take.metadata = { isNormalMaterial: false }
+        this.take.metadata = {
+          isNormalMaterial: false,
+          isGlassExtented: false,
+        }
 
         const childMeshes = this.take.getChildMeshes();
         this.takeHead = childMeshes[0];

@@ -12,6 +12,9 @@ export default class Animation {
 
     window.addEventListener("keydown", (e) => {
       console.log(e);
+      if (e.code === "Digit8") {
+        this.extendGlasses();
+      }
       if (e.code === "KeyB") {
         this.changeBackgroundColor();
       }
@@ -66,6 +69,36 @@ export default class Animation {
         mesh.material = mesh.metadata.initialMaterial;
       });
       this.tatoe.take.metadata.isNormalMaterial = false;
+    }
+  }
+
+  extendGlasses() {
+    const frameLength = 7;
+
+    if (!this.tatoe.takeGlassL.animations.length) {
+      const animation = new BABYLON.Animation("scaleZ", "scaling.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+      const keyFrames = [];
+      keyFrames.push({
+        frame: 0,
+        value: 1
+      });
+      keyFrames.push({
+        frame: frameLength,
+        value: 15,
+      });
+      animation.setKeys(keyFrames);
+      this.tatoe.takeGlassL.animations.push(animation);
+      this.tatoe.takeGlassR.animations.push(animation);
+    }
+
+    if (!this.tatoe.take.metadata.isGlassExtended) {
+      this.scene.beginAnimation(this.tatoe.takeGlassL, 0, frameLength);
+      this.scene.beginAnimation(this.tatoe.takeGlassR, 0, frameLength);
+      this.tatoe.take.metadata.isGlassExtended = true;
+    } else {
+      this.scene.beginAnimation(this.tatoe.takeGlassL, frameLength, 0);
+      this.scene.beginAnimation(this.tatoe.takeGlassR, frameLength, 0);
+      this.tatoe.take.metadata.isGlassExtended = false;
     }
   }
 }
