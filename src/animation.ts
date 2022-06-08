@@ -1,4 +1,5 @@
 import * as BABYLON from '@babylonjs/core'
+import { NormalMaterial } from '@babylonjs/materials'
 import Tatoe from './tatoe'
 
 export default class Animation {
@@ -16,6 +17,9 @@ export default class Animation {
       }
       if (e.code === "KeyC") {
         this.changeCameraPosition();
+      }
+      if (e.code === "KeyM") {
+        this.changeMaterial();
       }
     });
   }
@@ -42,5 +46,26 @@ export default class Animation {
     this.camera.orthoRight = this.camera.radius / zoom;
     this.camera.orthoBottom = -this.camera.radius * aspect / zoom;
     this.camera.orthoTop = this.camera.radius * aspect / zoom;
+  }
+
+  changeMaterial() {
+    if (!this.tatoe.take.metadata.isNormalMaterial) {
+      const normalMaterial = new NormalMaterial("normalMaterial", this.scene);
+      this.tatoe.take.getChildMeshes().forEach((mesh) => {
+        mesh.material = normalMaterial;
+      });
+      this.tatoe.eri.getChildMeshes().forEach((mesh) => {
+        mesh.material = normalMaterial;
+      });
+      this.tatoe.take.metadata.isNormalMaterial = true;
+    } else {
+      this.tatoe.take.getChildMeshes().forEach((mesh) => {
+        mesh.material = mesh.metadata.initialMaterial;
+      });
+      this.tatoe.eri.getChildMeshes().forEach((mesh) => {
+        mesh.material = mesh.metadata.initialMaterial;
+      });
+      this.tatoe.take.metadata.isNormalMaterial = false;
+    }
   }
 }

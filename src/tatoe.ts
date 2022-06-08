@@ -47,6 +47,7 @@ export default class Tatoe {
       .then((result) => {
         this.take = result.meshes[0];
         this.take.position = new BABYLON.Vector3(0.375, -0.1, 0);
+        this.take.metadata = { isNormalMaterial: false }
 
         const childMeshes = this.take.getChildMeshes();
         this.takeHead = childMeshes[0];
@@ -61,6 +62,10 @@ export default class Tatoe {
         childMeshes[10].parent = childMeshes[9];
         this.takeYellowCap = childMeshes[9];
         this.takeYellowCap.setEnabled(false);
+
+        childMeshes.forEach((mesh) => {
+          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
+        });
 
         this.isTakeLoaded = true;
       })
@@ -82,6 +87,10 @@ export default class Tatoe {
         this.eriEarR = childMeshes[7];
         this.eriCheese = childMeshes[8];
         this.eriCheese.setEnabled(false);
+
+        childMeshes.forEach((mesh) => {
+          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
+        });
 
         this.isEriLoaded = true;
       })
