@@ -1,6 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import Tatoe from "./tatoe"
+import Animation from "./animation"
 import * as BABYLON from "@babylonjs/core";
 
 class App {
@@ -26,6 +27,7 @@ class App {
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
     const tatoe = new Tatoe(scene);
+    const animation = new Animation(tatoe, scene);
 
     // hide/show the Inspector
     window.addEventListener("keydown", (ev) => {
