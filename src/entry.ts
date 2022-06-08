@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import Tatoe from "./tatoe"
-import { Engine, Scene, Camera, ArcRotateCamera, Vector3, HemisphericLight, MeshBuilder } from "@babylonjs/core";
+import * as BABYLON from "@babylonjs/core";
 
 class App {
   constructor() {
@@ -13,16 +13,17 @@ class App {
     document.body.appendChild(canvas);
 
     // initialize babylon scene and engine
-    const engine = new Engine(canvas, true);
-    const scene = new Scene(engine);
+    const engine = new BABYLON.Engine(canvas, true);
+    const scene = new BABYLON.Scene(engine);
+    scene.clearColor = BABYLON.Color4.FromHexString("#B7BC9B");
 
-    const camera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 3, Vector3.Zero(), scene);
-    camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
-    camera.setTarget(Vector3.Zero());
+    const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 3, BABYLON.Vector3.Zero(), scene);
+    camera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
+    camera.setTarget(BABYLON.Vector3.Zero());
     camera.attachControl(canvas, true);
     camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
 
-    const light: HemisphericLight = new HemisphericLight("light", new Vector3(1, 1, 0), scene);
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
     const tatoe = new Tatoe(scene);
 
