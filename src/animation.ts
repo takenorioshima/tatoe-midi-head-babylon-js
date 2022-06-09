@@ -24,6 +24,9 @@ export default class Animation {
       if (e.code === "KeyH") {
         this.rotateHat();
       }
+      if (e.code === "KeyL") {
+        this.rotateLips();
+      }
       if (e.code === "KeyM") {
         this.changeMaterial();
       }
@@ -136,6 +139,31 @@ export default class Animation {
       this.scene.beginAnimation(this.tatoe.eriHat, frameLength, 0);
       this.tatoe.eriHat.metadata.isRotated = false;
     }
+  }
+
+  rotateLips() {
+    const frameLength = 15;
+
+    if (!this.tatoe.takeLipTop.animations.length) {
+      const r = new BABYLON.Animation("r", "rotation.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
+      r.setKeys([
+        { frame: 0, value: 0 },
+        { frame: frameLength, value: Math.PI * 2 }
+      ]);
+      this.tatoe.takeLipTop.animations.push(r);
+      this.tatoe.takeLipBottom.animations.push(r);
+    }
+
+    if (!this.tatoe.takeLipTop.metadata.isRotated) {
+      this.scene.beginAnimation(this.tatoe.takeLipTop, 0, frameLength);
+      this.scene.beginAnimation(this.tatoe.takeLipBottom, frameLength, 0);
+      this.tatoe.takeLipTop.metadata.isRotated = true;
+    } else {
+      this.scene.beginAnimation(this.tatoe.takeLipTop, frameLength, 0);
+      this.scene.beginAnimation(this.tatoe.takeLipBottom, 0, frameLength);
+      this.tatoe.takeLipTop.metadata.isRotated = false;
+    }
+
   }
 
   reset() {
