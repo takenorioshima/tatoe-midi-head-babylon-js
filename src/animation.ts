@@ -82,19 +82,13 @@ export default class Animation {
     const frameLength = 7;
 
     if (!this.tatoe.takeGlassL.animations.length) {
-      const animation = new BABYLON.Animation("scaleZ", "scaling.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
-      const keyFrames = [];
-      keyFrames.push({
-        frame: 0,
-        value: 1
-      });
-      keyFrames.push({
-        frame: frameLength,
-        value: 15,
-      });
-      animation.setKeys(keyFrames);
-      this.tatoe.takeGlassL.animations.push(animation);
-      this.tatoe.takeGlassR.animations.push(animation);
+      const s = new BABYLON.Animation("s", "scaling.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+      s.setKeys([
+        { frame: 0, value: 1 },
+        { frame: frameLength, value: 15 }
+      ]);
+      this.tatoe.takeGlassL.animations.push(s);
+      this.tatoe.takeGlassR.animations.push(s);
     }
 
     if (!this.tatoe.takeGlassL.metadata.isExtended) {
@@ -113,47 +107,26 @@ export default class Animation {
 
     if (!this.tatoe.eriHat.animations.length) {
       const r = new BABYLON.Animation("r", "rotation.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+      r.setKeys([
+        { frame: 0, value: 0 },
+        { frame: frameLength, value: Math.PI * 2 }
+      ]);
+
       const s = new BABYLON.Animation("s", "scaling", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+      s.setKeys([
+        { frame: 0, value: new BABYLON.Vector3(1, 1, 1) },
+        { frame: frameLength, value: new BABYLON.Vector3(1.2, 1.2, 1.2) }
+      ]);
+
       const p = new BABYLON.Animation("p", "position.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+      p.setKeys([
+        { frame: 0, value: 0 },
+        { frame: frameLength, value: 0.3 }
+      ]);
 
-      const rKeyFrames = [];
-      rKeyFrames.push({
-        frame: 0,
-        value: 0
-      });
-      rKeyFrames.push({
-        frame: frameLength,
-        value: Math.PI * 2
-      });
-      r.setKeys(rKeyFrames);
-
-      const sKeyFrames = [];
-      sKeyFrames.push({
-        frame: 0,
-        value: new BABYLON.Vector3(1, 1, 1)
-      });
-      sKeyFrames.push({
-        frame: frameLength,
-        value: new BABYLON.Vector3(1.2, 1.2, 1.2)
-      });
-      s.setKeys(sKeyFrames);
-
-      const pKeyFrames = [];
-      pKeyFrames.push({
-        frame: 0,
-        value: 0
-      });
-      pKeyFrames.push({
-        frame: frameLength,
-        value: 0.3
-      });
-      p.setKeys(pKeyFrames);
-
-      console.log(this.tatoe.eriHat.scaling);
       this.tatoe.eriHat.animations.push(r);
       this.tatoe.eriHat.animations.push(s);
       this.tatoe.eriHat.animations.push(p);
-      const animatable = this.scene.beginAnimation(this.tatoe.eriHat, 0, frameLength);
     }
 
     if (!this.tatoe.eriHat.metadata.isRotated) {
