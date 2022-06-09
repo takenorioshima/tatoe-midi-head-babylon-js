@@ -46,29 +46,37 @@ export default class Tatoe {
     BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "take.glb", scene)
       .then((result) => {
         this.take = result.meshes[0];
-        this.take.position = new BABYLON.Vector3(0.375, -0.1, 0);
+
+        const childMeshes = this.take.getChildMeshes();
+        this.takeCap = childMeshes[4].addChild(childMeshes[5]);
+        this.takeHead = childMeshes[0];
+        this.takeGlassL = childMeshes[8];
+        this.takeGlassR = childMeshes[1];
+        this.takeGlassFrame = childMeshes[3];
+        this.takeNose = childMeshes[2];
+        this.takeLipTop = childMeshes[6];
+        this.takeLipBottom = childMeshes[7];
+        this.takeYellowCap = childMeshes[9].addChild(childMeshes[10]);
+
+        this.takeHead.rotationQuaternion = null;
+        this.takeGlassL.rotationQuaternion = null;
+        this.takeGlassR.rotationQuaternion = null;
+        this.takeGlassFrame.rotationQuaternion = null;
+        this.takeNose.rotationQuaternion = null;
+        this.takeLipTop.rotationQuaternion = null;
+        this.takeLipBottom.rotationQuaternion = null;
+
+        childMeshes.forEach((mesh) => {
+          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
+        });
+
         this.take.metadata = {
           isNormalMaterial: false,
           isGlassExtented: false,
         }
 
-        const childMeshes = this.take.getChildMeshes();
-        this.takeHead = childMeshes[0];
-        this.takeGlassR = childMeshes[1];
-        this.takeNose = childMeshes[2];
-        this.takeGlassFrame = childMeshes[3];
-        childMeshes[5].parent = childMeshes[4];
-        this.takeCap = childMeshes[4];
-        this.takeLipTop = childMeshes[6];
-        this.takeLipBottom = childMeshes[7];
-        this.takeGlassL = childMeshes[8];
-        childMeshes[10].parent = childMeshes[9];
-        this.takeYellowCap = childMeshes[9];
+        this.take.position = new BABYLON.Vector3(0.375, -0.1, 0);
         this.takeYellowCap.setEnabled(false);
-
-        childMeshes.forEach((mesh) => {
-          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
-        });
 
         this.isTakeLoaded = true;
       })
@@ -77,9 +85,9 @@ export default class Tatoe {
     BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "eri.glb", scene)
       .then((result) => {
         this.eri = result.meshes[0];
-        this.eri.position = new BABYLON.Vector3(-0.375, -0.1, 0);
 
         const childMeshes = this.eri.getChildMeshes();
+
         this.eriEyes = childMeshes[0];
         this.eriHair = childMeshes[1];
         this.eriHat = childMeshes[2];
@@ -89,11 +97,25 @@ export default class Tatoe {
         this.eriEarL = childMeshes[6];
         this.eriEarR = childMeshes[7];
         this.eriCheese = childMeshes[8];
-        this.eriCheese.setEnabled(false);
+
+        this.eriEyes.rotationQuaternion = null;
+        this.eriHair.rotationQuaternion = null;
+        this.eriHat.rotationQuaternion = null;
+        this.eriHead.rotationQuaternion = null;
+        this.eriStrow.rotationQuaternion = null;
+        this.eriNose.rotationQuaternion = null;
+        this.eriEarL.rotationQuaternion = null;
+        this.eriEarR.rotationQuaternion = null;
+        this.eriCheese.rotationQuaternion = null;
 
         childMeshes.forEach((mesh) => {
           mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
         });
+
+        this.eriHat.metadata = { isRotated: false }
+
+        this.eri.position = new BABYLON.Vector3(-0.375, -0.1, 0);
+        this.eriCheese.setEnabled(false);
 
         this.isEriLoaded = true;
       })
