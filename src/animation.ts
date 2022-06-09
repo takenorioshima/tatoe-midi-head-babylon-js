@@ -94,14 +94,14 @@ export default class Animation {
       this.tatoe.takeGlassR.animations.push(animation);
     }
 
-    if (!this.tatoe.take.metadata.isGlassExtended) {
+    if (!this.tatoe.takeGlassL.metadata.isExtended) {
       this.scene.beginAnimation(this.tatoe.takeGlassL, 0, frameLength);
       this.scene.beginAnimation(this.tatoe.takeGlassR, 0, frameLength);
-      this.tatoe.take.metadata.isGlassExtended = true;
+      this.tatoe.takeGlassL.metadata.isExtended = true;
     } else {
       this.scene.beginAnimation(this.tatoe.takeGlassL, frameLength, 0);
       this.scene.beginAnimation(this.tatoe.takeGlassR, frameLength, 0);
-      this.tatoe.take.metadata.isGlassExtended = false;
+      this.tatoe.takeGlassL.metadata.isExtended = false;
     }
   }
 

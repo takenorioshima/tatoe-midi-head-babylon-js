@@ -71,9 +71,9 @@ export default class Tatoe {
         });
 
         this.take.metadata = {
-          isNormalMaterial: false,
-          isGlassExtented: false,
+          isNormalMaterial: false
         }
+        this.takeGlassL.metadata.isExtended = false;
 
         this.take.position = new BABYLON.Vector3(0.375, -0.1, 0);
         this.takeYellowCap.setEnabled(false);
@@ -112,7 +112,7 @@ export default class Tatoe {
           mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
         });
 
-        this.eriHat.metadata = { isRotated: false }
+        this.eriHat.metadata.isRotated = false;
 
         this.eri.position = new BABYLON.Vector3(-0.375, -0.1, 0);
         this.eriCheese.setEnabled(false);
