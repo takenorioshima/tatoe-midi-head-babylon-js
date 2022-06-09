@@ -27,6 +27,9 @@ export default class Animation {
       if (e.code === "KeyM") {
         this.changeMaterial();
       }
+      if (e.code === "Escape") {
+        this.reset();
+      }
     });
   }
 
@@ -160,5 +163,19 @@ export default class Animation {
       this.scene.beginAnimation(this.tatoe.eriHat, frameLength, 0);
       this.tatoe.eriHat.metadata.isRotated = false;
     }
+  }
+
+  reset() {
+    this.tatoe.takeGlassL.metadata.isExtended = false;
+    this.tatoe.takeGlassL.scaling.z = 1;
+    this.tatoe.takeGlassR.scaling.z = 1;
+
+    this.tatoe.eriHat.metadata.isRotated = false;
+    this.tatoe.eriHat.position.y = 0;
+    this.tatoe.eriHat.scaling = new BABYLON.Vector3(1, 1, 1);
+    this.tatoe.eriHat.rotation.y = 0;
+
+    this.tatoe.take.metadata.isNormalMaterial = true;
+    this.changeMaterial();
   }
 }
