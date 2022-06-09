@@ -21,6 +21,9 @@ export default class Animation {
       if (e.code === "KeyC") {
         this.changeCameraPosition();
       }
+      if (e.code === "KeyH") {
+        this.rotateHat();
+      }
       if (e.code === "KeyM") {
         this.changeMaterial();
       }
@@ -99,6 +102,63 @@ export default class Animation {
       this.scene.beginAnimation(this.tatoe.takeGlassL, frameLength, 0);
       this.scene.beginAnimation(this.tatoe.takeGlassR, frameLength, 0);
       this.tatoe.take.metadata.isGlassExtended = false;
+    }
+  }
+
+  rotateHat() {
+    const frameLength = 7;
+
+    if (!this.tatoe.eriHat.animations.length) {
+      const r = new BABYLON.Animation("r", "rotation.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+      const s = new BABYLON.Animation("s", "scaling", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+      const p = new BABYLON.Animation("p", "position.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+      const rKeyFrames = [];
+      rKeyFrames.push({
+        frame: 0,
+        value: 0
+      });
+      rKeyFrames.push({
+        frame: frameLength,
+        value: Math.PI * 2
+      });
+      r.setKeys(rKeyFrames);
+
+      const sKeyFrames = [];
+      sKeyFrames.push({
+        frame: 0,
+        value: new BABYLON.Vector3(1, 1, 1)
+      });
+      sKeyFrames.push({
+        frame: frameLength,
+        value: new BABYLON.Vector3(1.2, 1.2, 1.2)
+      });
+      s.setKeys(sKeyFrames);
+
+      const pKeyFrames = [];
+      pKeyFrames.push({
+        frame: 0,
+        value: 0
+      });
+      pKeyFrames.push({
+        frame: frameLength,
+        value: 0.3
+      });
+      p.setKeys(pKeyFrames);
+
+      console.log(this.tatoe.eriHat.scaling);
+      this.tatoe.eriHat.animations.push(r);
+      this.tatoe.eriHat.animations.push(s);
+      this.tatoe.eriHat.animations.push(p);
+      const animatable = this.scene.beginAnimation(this.tatoe.eriHat, 0, frameLength);
+    }
+
+    if (!this.tatoe.eriHat.metadata.isRotated) {
+      this.scene.beginAnimation(this.tatoe.eriHat, 0, frameLength);
+      this.tatoe.eriHat.metadata.isRotated = true;
+    } else {
+      this.scene.beginAnimation(this.tatoe.eriHat, frameLength, 0);
+      this.tatoe.eriHat.metadata.isRotated = false;
     }
   }
 }
