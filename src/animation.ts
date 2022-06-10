@@ -33,6 +33,9 @@ export default class Animation {
       if (e.code === "KeyM") {
         this.changeMaterial();
       }
+      if (e.code === "KeyS") {
+        this.shrinkHeads();
+      }
       if (e.code === "Escape") {
         this.reset();
       }
@@ -197,9 +200,35 @@ export default class Animation {
     this.scene.beginAnimation(this.tatoe.eri, 0, frameLength);
   }
 
+  shrinkHeads() {
+    const frameLength = 7;
+    if (!this.tatoe.takeHead.animations.find((v) => { v.name === "shirinkHead" })) {
+      const shrinkHead = new BABYLON.Animation("shirinkHead", "scaling", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
+      shrinkHead.setKeys([
+        { frame: 0, value: new BABYLON.Vector3(1, 1, 1) },
+        { frame: frameLength, value: new BABYLON.Vector3(0, 0, 0) }
+      ]);
+      this.tatoe.takeHead.animations.push(shrinkHead);
+      this.tatoe.eriHead.animations.push(shrinkHead);
+    }
+    if (!this.tatoe.takeHead.metadata.isShrinked) {
+      this.scene.beginAnimation(this.tatoe.takeHead, 0, frameLength);
+      this.scene.beginAnimation(this.tatoe.eriHead, 0, frameLength);
+      this.tatoe.takeHead.metadata.isShrinked = true;
+    } else {
+      this.scene.beginAnimation(this.tatoe.takeHead, frameLength, 0);
+      this.scene.beginAnimation(this.tatoe.eriHead, frameLength, 0);
+      this.tatoe.takeHead.metadata.isShrinked = false;
+    }
+  }
+
   reset() {
     this.tatoe.take.rotation = new BABYLON.Vector3(0, 0, 0);
     this.tatoe.eri.rotation = new BABYLON.Vector3(0, 0, 0);
+
+    this.tatoe.takeHead.metadata.isShrinked = false;
+    this.tatoe.takeHead.scaling = new BABYLON.Vector3(1, 1, 1);
+    this.tatoe.eriHead.scaling = new BABYLON.Vector3(1, 1, 1);
 
     this.tatoe.takeGlassL.metadata.isExtended = false;
     this.tatoe.takeGlassL.scaling.z = 1;
@@ -212,5 +241,6 @@ export default class Animation {
 
     this.tatoe.take.metadata.isNormalMaterial = true;
     this.changeMaterial();
+
   }
 }

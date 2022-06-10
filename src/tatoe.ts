@@ -75,6 +75,7 @@ export default class Tatoe {
         }
         this.takeGlassL.metadata.isExtended = false;
         this.takeLipTop.metadata.isRotated = false;
+        this.takeHead.metadata.isShrinked = false;
 
         this.take.position = new BABYLON.Vector3(0.375, -0.1, 0);
         this.takeYellowCap.setEnabled(false);
