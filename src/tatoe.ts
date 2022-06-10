@@ -70,10 +70,17 @@ export default class Tatoe {
           mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
         });
 
+        this.takeGlassL.metadata.initialPosition = this.takeGlassL.position;
+        this.takeGlassR.metadata.initialPosition = this.takeGlassR.position;
+        this.takeGlassFrame.metadata.initialPosition = this.takeGlassFrame.position;
+        this.takeLipTop.metadata.initialPosition = this.takeLipTop.position;
+        this.takeLipBottom.metadata.initialPosition = this.takeLipBottom.position;
+
         this.take.metadata = {
           isNormalMaterial: false,
           isWireframed: false
         }
+
         this.takeGlassL.metadata.isExtended = false;
         this.takeLipTop.metadata.isRotated = false;
         this.takeHead.metadata.isShrinked = false;

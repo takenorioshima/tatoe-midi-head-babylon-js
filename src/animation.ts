@@ -24,6 +24,9 @@ export default class Animation {
       if (e.code === "KeyC") {
         this.changeCameraPosition();
       }
+      if (e.code === "KeyD") {
+        this.dissolve();
+      }
       if (e.code === "KeyE") {
         this.swapEyes();
       }
@@ -90,6 +93,60 @@ export default class Animation {
         mesh.material = mesh.metadata.initialMaterial;
       });
       this.tatoe.take.metadata.isNormalMaterial = false;
+    }
+  }
+
+  dissolve() {
+    const easingFunction = new BABYLON.CircleEase();
+    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+    const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
+
+    if (!this.tatoe.take.metadata.isDissolved) {
+      childMeshes.forEach((mesh) => {
+        BABYLON.Animation.CreateAndStartAnimation(
+          "dissolvePosition", mesh, "position", 60, 30,
+          new BABYLON.Vector3(0, 0, 0),
+          this._randomVector3(-0.5, 0.5),
+          0, easingFunction
+        );
+        BABYLON.Animation.CreateAndStartAnimation(
+          "dissolveRotation", mesh, "rotation", 60, 30,
+          new BABYLON.Vector3(0, Math.PI, 0),
+          this._randomVector3(0, Math.PI * 2),
+          0, easingFunction
+        );
+        BABYLON.Animation.CreateAndStartAnimation(
+          "dissolveScaling", mesh, "scaling", 60, 30,
+          new BABYLON.Vector3(1, 1, 1),
+          this._randomVector3(0.2, 2),
+          0, easingFunction
+        );
+      });
+      this.tatoe.take.metadata.isDissolved = true;
+    } else {
+      childMeshes.forEach((mesh) => {
+        let initialPosition: BABYLON.Vector3;
+        initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : new BABYLON.Vector3(0, 0, 0);
+        BABYLON.Animation.CreateAndStartAnimation(
+          "dissolvePosition", mesh, "position", 60, 30,
+          mesh.position,
+          initialPosition,
+          0, easingFunction
+        );
+        BABYLON.Animation.CreateAndStartAnimation(
+          "dissolveRotation", mesh, "rotation", 60, 30,
+          mesh.rotation,
+          new BABYLON.Vector3(0, 0, 0),
+          0, easingFunction
+        );
+        BABYLON.Animation.CreateAndStartAnimation(
+          "dissolveScaling", mesh, "scaling", 60, 30,
+          mesh.scaling,
+          new BABYLON.Vector3(1, 1, 1),
+          0, easingFunction
+        );
+      });
+      this.tatoe.take.metadata.isDissolved = false;
     }
   }
 
@@ -285,11 +342,21 @@ export default class Animation {
     this.tatoe.eriHat.scaling = new BABYLON.Vector3(1, 1, 1);
     this.tatoe.eriHat.rotation.y = 0;
 
+    this.tatoe.take.metadata.isDissolved = true;
+    this.dissolve();
+
     this.tatoe.eriEyes.metadata.isSwapped = true;
     this.swapEyes();
 
     this.tatoe.take.metadata.isNormalMaterial = true;
     this.changeMaterial();
 
+
+  private _randomVector3(min: number, max: number) {
+    return new BABYLON.Vector3(
+      Math.random() * (max - min) + min,
+      Math.random() * (max - min) + min,
+      Math.random() * (max - min) + min,
+    );
   }
 }
