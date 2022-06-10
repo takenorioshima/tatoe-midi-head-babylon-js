@@ -24,6 +24,9 @@ export default class Animation {
       if (e.code === "KeyC") {
         this.changeCameraPosition();
       }
+      if (e.code === "KeyE") {
+        this.swapEyes();
+      }
       if (e.code === "KeyH") {
         this.rotateHat();
       }
@@ -222,6 +225,27 @@ export default class Animation {
     }
   }
 
+  swapEyes() {
+    const glasses = new BABYLON.TransformNode("glasses", this.scene);
+    this.tatoe.takeGlassL.parent = glasses;
+    this.tatoe.takeGlassR.parent = glasses;
+    this.tatoe.takeGlassFrame.parent = glasses;
+
+    if (!this.tatoe.eriEyes.metadata.isSwapped) {
+      glasses.parent = this.tatoe.eri;
+      glasses.position.y = -0.05;
+      this.tatoe.eriEyes.parent = this.tatoe.take;
+      this.tatoe.eriEyes.position.y = 0.05;
+      this.tatoe.eriEyes.metadata.isSwapped = true;
+    } else {
+      glasses.parent = this.tatoe.take;
+      glasses.position.y = 0;
+      this.tatoe.eriEyes.parent = this.tatoe.eri;
+      this.tatoe.eriEyes.position.y = 0;
+      this.tatoe.eriEyes.metadata.isSwapped = false;
+    }
+  }
+
   reset() {
     this.tatoe.take.rotation = new BABYLON.Vector3(0, 0, 0);
     this.tatoe.eri.rotation = new BABYLON.Vector3(0, 0, 0);
@@ -238,6 +262,9 @@ export default class Animation {
     this.tatoe.eriHat.position.y = 0;
     this.tatoe.eriHat.scaling = new BABYLON.Vector3(1, 1, 1);
     this.tatoe.eriHat.rotation.y = 0;
+
+    this.tatoe.eriEyes.metadata.isSwapped = true;
+    this.swapEyes();
 
     this.tatoe.take.metadata.isNormalMaterial = true;
     this.changeMaterial();

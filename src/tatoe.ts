@@ -115,6 +115,7 @@ export default class Tatoe {
         });
 
         this.eriHat.metadata.isRotated = false;
+        this.eriEyes.metadata.isSwapped = false;
 
         this.eri.position = new BABYLON.Vector3(-0.375, -0.1, 0);
         this.eriCheese.setEnabled(false);
