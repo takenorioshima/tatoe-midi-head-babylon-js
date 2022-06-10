@@ -317,6 +317,7 @@ export default class Animation {
       glasses.position.y = -0.05;
       this.tatoe.eriEyes.parent = this.tatoe.take;
       this.tatoe.eriEyes.position.y = 0.05;
+      this.tatoe.eriEyes.position.z = -0.015;
       this.tatoe.eriEyes.metadata.isSwapped = true;
     } else {
       glasses.parent = this.tatoe.take;
