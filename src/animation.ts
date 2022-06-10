@@ -39,6 +39,9 @@ export default class Animation {
       if (e.code === "KeyS") {
         this.shrinkHeads();
       }
+      if (e.code === "KeyW") {
+        this.showWireframes();
+      }
       if (e.code === "Escape") {
         this.reset();
       }
@@ -201,6 +204,25 @@ export default class Animation {
 
     this.scene.beginAnimation(this.tatoe.take, 0, frameLength);
     this.scene.beginAnimation(this.tatoe.eri, 0, frameLength);
+  }
+
+  showWireframes() {
+    const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
+    console.log(childMeshes);
+
+    if (!this.tatoe.take.metadata.isWireframed) {
+      childMeshes.forEach((mesh) => {
+        console.log(mesh);
+        mesh.material.wireframe = true;
+      });
+      this.tatoe.take.metadata.isWireframed = true;
+    } else {
+      childMeshes.forEach((mesh) => {
+        mesh.material.wireframe = false;
+        mesh.material = mesh.metadata.initialMaterial;
+      })
+      this.tatoe.take.metadata.isWireframed = false;
+    }
   }
 
   shrinkHeads() {

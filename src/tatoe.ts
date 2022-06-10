@@ -71,7 +71,8 @@ export default class Tatoe {
         });
 
         this.take.metadata = {
-          isNormalMaterial: false
+          isNormalMaterial: false,
+          isWireframed: false
         }
         this.takeGlassL.metadata.isExtended = false;
         this.takeLipTop.metadata.isRotated = false;
