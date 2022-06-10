@@ -103,9 +103,11 @@ export default class Animation {
 
     if (!this.tatoe.take.metadata.isDissolved) {
       childMeshes.forEach((mesh) => {
+        let initialPosition: BABYLON.Vector3;
+        initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : BABYLON.Vector3.Zero();
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolvePosition", mesh, "position", 60, 30,
-          new BABYLON.Vector3(0, 0, 0),
+          initialPosition,
           this._randomVector3(-0.5, 0.5),
           0, easingFunction
         );
