@@ -113,13 +113,13 @@ export default class Animation {
         );
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveRotation", mesh, "rotation", 60, 30,
-          new BABYLON.Vector3(0, Math.PI, 0),
+          BABYLON.Vector3.Zero(),
           this._randomVector3(0, Math.PI * 2),
           0, easingFunction
         );
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveScaling", mesh, "scaling", 60, 30,
-          new BABYLON.Vector3(1, 1, 1),
+          BABYLON.Vector3.One(),
           this._randomVector3(0.2, 2),
           0, easingFunction
         );
@@ -128,7 +128,7 @@ export default class Animation {
     } else {
       childMeshes.forEach((mesh) => {
         let initialPosition: BABYLON.Vector3;
-        initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : new BABYLON.Vector3(0, 0, 0);
+        initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : BABYLON.Vector3.Zero();
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolvePosition", mesh, "position", 60, 30,
           mesh.position,
@@ -138,13 +138,13 @@ export default class Animation {
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveRotation", mesh, "rotation", 60, 30,
           mesh.rotation,
-          new BABYLON.Vector3(0, 0, 0),
+          BABYLON.Vector3.Zero(),
           0, easingFunction
         );
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveScaling", mesh, "scaling", 60, 30,
           mesh.scaling,
-          new BABYLON.Vector3(1, 1, 1),
+          BABYLON.Vector3.One(),
           0, easingFunction
         );
       });
@@ -188,7 +188,7 @@ export default class Animation {
 
       const s = new BABYLON.Animation("s", "scaling", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
       s.setKeys([
-        { frame: 0, value: new BABYLON.Vector3(1, 1, 1) },
+        { frame: 0, value: BABYLON.Vector3.One() },
         { frame: frameLength, value: new BABYLON.Vector3(1.2, 1.2, 1.2) }
       ]);
 
@@ -289,8 +289,8 @@ export default class Animation {
     if (!this.tatoe.takeHead.animations.find((v) => { v.name === "shirinkHead" })) {
       const shrinkHead = new BABYLON.Animation("shirinkHead", "scaling", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
       shrinkHead.setKeys([
-        { frame: 0, value: new BABYLON.Vector3(1, 1, 1) },
-        { frame: frameLength, value: new BABYLON.Vector3(0, 0, 0) }
+        { frame: 0, value: BABYLON.Vector3.One() },
+        { frame: frameLength, value: BABYLON.Vector3.Zero() }
       ]);
       this.tatoe.takeHead.animations.push(shrinkHead);
       this.tatoe.eriHead.animations.push(shrinkHead);
@@ -322,18 +322,18 @@ export default class Animation {
       glasses.parent = this.tatoe.take;
       glasses.position.y = 0;
       this.tatoe.eriEyes.parent = this.tatoe.eri;
-      this.tatoe.eriEyes.position.y = 0;
+      this.tatoe.eriEyes.position = BABYLON.Vector3.Zero();
       this.tatoe.eriEyes.metadata.isSwapped = false;
     }
   }
 
   reset() {
-    this.tatoe.take.rotation = new BABYLON.Vector3(0, Math.PI, 0);
-    this.tatoe.eri.rotation = new BABYLON.Vector3(0, Math.PI, 0);
+    this.tatoe.take.rotation = BABYLON.Vector3.Zero();
+    this.tatoe.eri.rotation = BABYLON.Vector3.Zero();
 
     this.tatoe.takeHead.metadata.isShrinked = false;
-    this.tatoe.takeHead.scaling = new BABYLON.Vector3(1, 1, 1);
-    this.tatoe.eriHead.scaling = new BABYLON.Vector3(1, 1, 1);
+    this.tatoe.takeHead.scaling = BABYLON.Vector3.One();
+    this.tatoe.eriHead.scaling = BABYLON.Vector3.One();
 
     this.tatoe.takeGlassL.metadata.isExtended = false;
     this.tatoe.takeGlassL.scaling.z = 1;
@@ -341,7 +341,7 @@ export default class Animation {
 
     this.tatoe.eriHat.metadata.isRotated = false;
     this.tatoe.eriHat.position.y = 0;
-    this.tatoe.eriHat.scaling = new BABYLON.Vector3(1, 1, 1);
+    this.tatoe.eriHat.scaling = BABYLON.Vector3.One();
     this.tatoe.eriHat.rotation.y = 0;
 
     this.tatoe.take.metadata.isDissolved = true;
