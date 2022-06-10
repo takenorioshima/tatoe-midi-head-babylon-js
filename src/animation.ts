@@ -12,6 +12,9 @@ export default class Animation {
 
     window.addEventListener("keydown", (e) => {
       console.log(e);
+      if (e.code === "Digit5") {
+        this.rotateTatoe();
+      }
       if (e.code === "Digit8") {
         this.extendGlasses();
       }
@@ -166,7 +169,38 @@ export default class Animation {
 
   }
 
+  rotateTatoe() {
+    this.tatoe.take.animations = this.tatoe.take.animations.filter((v) => {
+      if (v.name === "randomRotation") return false;
+    });
+    this.tatoe.eri.animations = this.tatoe.eri.animations.filter((v) => {
+      if (v.name === "randomRotation") return false;
+    });
+
+    const frameLength = 15;
+
+    const randomRotation = new BABYLON.Animation("randomRotation", "rotation", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
+    const takeRandomRotation = randomRotation.clone();
+    const eriRandomRotation = randomRotation.clone();
+    takeRandomRotation.setKeys([
+      { frame: 0, value: this.tatoe.take.rotation },
+      { frame: frameLength, value: new BABYLON.Vector3(Math.random() * 3, Math.random() * 3, Math.random() * 3) }
+    ])
+    this.tatoe.take.animations.push(takeRandomRotation);
+    eriRandomRotation.setKeys([
+      { frame: 0, value: this.tatoe.eri.rotation },
+      { frame: frameLength, value: new BABYLON.Vector3(Math.random() * 3, Math.random() * 3, Math.random() * 3) }
+    ])
+    this.tatoe.eri.animations.push(eriRandomRotation);
+
+    this.scene.beginAnimation(this.tatoe.take, 0, frameLength);
+    this.scene.beginAnimation(this.tatoe.eri, 0, frameLength);
+  }
+
   reset() {
+    this.tatoe.take.rotation = new BABYLON.Vector3(0, 0, 0);
+    this.tatoe.eri.rotation = new BABYLON.Vector3(0, 0, 0);
+
     this.tatoe.takeGlassL.metadata.isExtended = false;
     this.tatoe.takeGlassL.scaling.z = 1;
     this.tatoe.takeGlassR.scaling.z = 1;
