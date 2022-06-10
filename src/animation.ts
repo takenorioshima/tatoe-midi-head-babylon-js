@@ -247,8 +247,8 @@ export default class Animation {
   }
 
   reset() {
-    this.tatoe.take.rotation = new BABYLON.Vector3(0, 0, 0);
-    this.tatoe.eri.rotation = new BABYLON.Vector3(0, 0, 0);
+    this.tatoe.take.rotation = new BABYLON.Vector3(0, Math.PI, 0);
+    this.tatoe.eri.rotation = new BABYLON.Vector3(0, Math.PI, 0);
 
     this.tatoe.takeHead.metadata.isShrinked = false;
     this.tatoe.takeHead.scaling = new BABYLON.Vector3(1, 1, 1);
