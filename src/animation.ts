@@ -353,7 +353,7 @@ export default class Animation {
 
     this.tatoe.take.metadata.isNormalMaterial = true;
     this.changeMaterial();
-
+  }
 
   private _randomVector3(min: number, max: number) {
     return new BABYLON.Vector3(
