@@ -17,6 +17,7 @@ class App {
     const engine = new BABYLON.Engine(canvas, true);
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = BABYLON.Color4.FromHexString("#B7BC9B");
+    scene.ambientColor = new BABYLON.Color3(1, 1, 1);
 
     const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 3, BABYLON.Vector3.Zero(), scene);
     camera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
@@ -24,7 +25,7 @@ class App {
     camera.attachControl(canvas, true);
     camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
 
-    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, -1), scene);
 
     const tatoe = new Tatoe(scene);
     const animation = new Animation(tatoe, scene, camera, engine);
