@@ -1,7 +1,7 @@
 import * as BABYLON from "@babylonjs/core";
 import '@babylonjs/loaders/glTF';
 
-export default class Tatoe {
+export default class Tatoe extends BABYLON.AbstractMesh {
 
   take: BABYLON.AbstractMesh;
   eri: BABYLON.AbstractMesh;
@@ -43,9 +43,12 @@ export default class Tatoe {
 
   constructor(public scene: BABYLON.Scene) {
 
+    super("tatoe", scene);
+
     BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "take.glb", scene)
       .then((result) => {
         this.take = result.meshes[0];
+        this.take.name = "take";
 
         const childMeshes = this.take.getChildMeshes();
         this.takeCap = childMeshes[4].addChild(childMeshes[5]);
@@ -88,13 +91,17 @@ export default class Tatoe {
         this.take.position = new BABYLON.Vector3(-0.375, -0.1, 0);
         this.takeYellowCap.setEnabled(false);
 
+        this.take.parent = this;
+
         this.isTakeLoaded = true;
       })
       .catch(console.error);
 
     BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "eri.glb", scene)
       .then((result) => {
+
         this.eri = result.meshes[0];
+        this.eri.name = "eri";
 
         const childMeshes = this.eri.getChildMeshes();
 
@@ -128,6 +135,8 @@ export default class Tatoe {
         this.eri.position = new BABYLON.Vector3(0.375, -0.1, 0);
         this.eriCheese.setEnabled(false);
 
+        this.eri.parent = this;
+
         this.isEriLoaded = true;
       })
       .catch(console.error);
@@ -135,7 +144,8 @@ export default class Tatoe {
     BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "shape.glb", scene)
       .then((result) => {
         this.shape = result.meshes[0];
-        this.shape.scaling = new BABYLON.Vector3(100, 100, 100);
+        this.shape.name = "shape";
+        this.shape.scaling = new BABYLON.Vector3(50, 50, 50);
 
         const childMeshes = this.shape.getChildMeshes();
         childMeshes.forEach((mesh, i) => {
@@ -151,6 +161,8 @@ export default class Tatoe {
         this.shapeE2 = childMeshes[6];
         this.shapeE3 = childMeshes[9];
         this.shapeE4 = childMeshes[5];
+
+        this.shape.parent = this;
 
         this.isShapeLoaded = true;
       })
