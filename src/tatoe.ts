@@ -45,6 +45,10 @@ export default class Tatoe extends BABYLON.AbstractMesh {
 
     super("tatoe", scene);
 
+    this.metadata = {
+      isZoomOut: false
+    }
+
     BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "take.glb", scene)
       .then((result) => {
         this.take = result.meshes[0];
@@ -81,7 +85,8 @@ export default class Tatoe extends BABYLON.AbstractMesh {
 
         this.take.metadata = {
           isNormalMaterial: false,
-          isWireframed: false
+          isWireframed: false,
+          isZoomOut: false
         }
 
         this.takeGlassL.metadata.isExtended = false;

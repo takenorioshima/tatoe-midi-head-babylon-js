@@ -45,6 +45,9 @@ export default class Animation {
       if (e.code === "KeyW") {
         this.showWireframes();
       }
+      if (e.code === "KeyZ") {
+        this.zoomOut();
+      }
       if (e.code === "Escape") {
         this.reset();
       }
@@ -325,6 +328,29 @@ export default class Animation {
       this.tatoe.eriEyes.parent = this.tatoe.eri;
       this.tatoe.eriEyes.position = BABYLON.Vector3.Zero();
       this.tatoe.eriEyes.metadata.isSwapped = false;
+    }
+  }
+
+  zoomOut() {
+    const easingFunction = new BABYLON.CircleEase();
+    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+
+    if (!this.tatoe.metadata.isZoomOut) {
+      BABYLON.Animation.CreateAndStartAnimation(
+        "zoomOut", this.tatoe, "scaling", 60, 60,
+        this.tatoe.scaling,
+        new BABYLON.Vector3(0.02, 0.02, 0.02),
+        0, easingFunction
+      );
+      this.tatoe.metadata.isZoomOut = true;
+    } else {
+      BABYLON.Animation.CreateAndStartAnimation(
+        "zoomIn", this.tatoe, "scaling", 60, 60,
+        this.tatoe.scaling,
+        BABYLON.Vector3.One(),
+        0, easingFunction
+      );
+      this.tatoe.metadata.isZoomOut = false;
     }
   }
 
