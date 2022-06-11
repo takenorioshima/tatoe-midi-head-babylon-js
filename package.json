@@ -1,12 +1,14 @@
 {
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --port 8080"
+    "start": "webpack-dev-server --port 8080",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {},
   "devDependencies": {
     "@babylonjs/core": "^5.9.0",
     "@babylonjs/inspector": "^5.9.0",
+    "gh-pages": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.3.0",
     "typescript": "^4.7.3",
