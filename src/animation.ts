@@ -246,8 +246,8 @@ export default class Animation {
 
     if (!this.tatoe.eriHat.metadata.isRotated) {
       BABYLON.Animation.CreateAndStartAnimation("scaleHat", this.tatoe.eriHat,
-        "scalling", this.fps, totalFrame,
-        this.tatoe.eriHat.scaling, new BABYLON.Vector3(1.2, 1.2, .12), loopMode
+        "scaling", this.fps, totalFrame,
+        this.tatoe.eriHat.scaling, new BABYLON.Vector3(1.2, 1.2, 1.2), loopMode
       );
       BABYLON.Animation.CreateAndStartAnimation("rotateHat", this.tatoe.eriHat,
         "rotation.y", this.fps, totalFrame,
@@ -260,7 +260,7 @@ export default class Animation {
       this.tatoe.eriHat.metadata.isRotated = true;
     } else {
       BABYLON.Animation.CreateAndStartAnimation("scaleHat", this.tatoe.eriHat,
-        "scalling", this.fps, totalFrame,
+        "scaling", this.fps, totalFrame,
         this.tatoe.eriHat.scaling, BABYLON.Vector3.One(), loopMode
       );
       BABYLON.Animation.CreateAndStartAnimation("rotateHat", this.tatoe.eriHat,
