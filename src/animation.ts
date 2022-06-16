@@ -241,37 +241,35 @@ export default class Animation {
   }
 
   rotateHat() {
-    const frameLength = 7;
-
-    if (!this.tatoe.eriHat.animations.length) {
-      const r = new BABYLON.Animation("r", "rotation.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-      r.setKeys([
-        { frame: 0, value: 0 },
-        { frame: frameLength, value: Math.PI * 2 }
-      ]);
-
-      const s = new BABYLON.Animation("s", "scaling", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-      s.setKeys([
-        { frame: 0, value: BABYLON.Vector3.One() },
-        { frame: frameLength, value: new BABYLON.Vector3(1.2, 1.2, 1.2) }
-      ]);
-
-      const p = new BABYLON.Animation("p", "position.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-      p.setKeys([
-        { frame: 0, value: 0 },
-        { frame: frameLength, value: 0.3 }
-      ]);
-
-      this.tatoe.eriHat.animations.push(r);
-      this.tatoe.eriHat.animations.push(s);
-      this.tatoe.eriHat.animations.push(p);
-    }
+    const totalFrame = 15;
+    const loopMode = 0;
 
     if (!this.tatoe.eriHat.metadata.isRotated) {
-      this.scene.beginAnimation(this.tatoe.eriHat, 0, frameLength);
+      BABYLON.Animation.CreateAndStartAnimation("scaleHat", this.tatoe.eriHat,
+        "scalling", this.fps, totalFrame,
+        this.tatoe.eriHat.scaling, new BABYLON.Vector3(1.2, 1.2, .12), loopMode
+      );
+      BABYLON.Animation.CreateAndStartAnimation("rotateHat", this.tatoe.eriHat,
+        "rotation.y", this.fps, totalFrame,
+        this.tatoe.eriHat.rotation.y, Math.PI * 2, loopMode
+      );
+      BABYLON.Animation.CreateAndStartAnimation("moveHat", this.tatoe.eriHat,
+        "position.y", this.fps, totalFrame,
+        this.tatoe.eriHat.position.y, 0.3, loopMode
+      );
       this.tatoe.eriHat.metadata.isRotated = true;
     } else {
-      this.scene.beginAnimation(this.tatoe.eriHat, frameLength, 0);
+      BABYLON.Animation.CreateAndStartAnimation("scaleHat", this.tatoe.eriHat,
+        "scalling", this.fps, totalFrame,
+        this.tatoe.eriHat.scaling, BABYLON.Vector3.One(), loopMode
+      );
+      BABYLON.Animation.CreateAndStartAnimation("rotateHat", this.tatoe.eriHat,
+        "rotation.y", this.fps, totalFrame, this.tatoe.eriHat.rotation.y, 0, 0
+      );
+      BABYLON.Animation.CreateAndStartAnimation("moveHat", this.tatoe.eriHat,
+        "position.y", this.fps, totalFrame,
+        this.tatoe.eriHat.position.y, 0, loopMode
+      );
       this.tatoe.eriHat.metadata.isRotated = false;
     }
   }
