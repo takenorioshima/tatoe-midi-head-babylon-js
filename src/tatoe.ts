@@ -74,8 +74,8 @@ export default class Tatoe extends BABYLON.AbstractMesh {
         this.takeLipBottom.rotationQuaternion = null;
 
         childMeshes.forEach((mesh) => {
-          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
           (mesh.material as BABYLON.StandardMaterial).ambientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
         });
 
         this.takeGlassL.metadata.initialPosition = this.takeGlassL.position;
@@ -132,8 +132,8 @@ export default class Tatoe extends BABYLON.AbstractMesh {
         this.eriCheese.rotationQuaternion = null;
 
         childMeshes.forEach((mesh) => {
-          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
           (mesh.material as BABYLON.StandardMaterial).ambientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
         });
 
         this.eriHat.metadata.isRotated = false;
