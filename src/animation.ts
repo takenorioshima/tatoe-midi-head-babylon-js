@@ -243,34 +243,35 @@ export default class Animation {
   rotateHat() {
     const totalFrame = 15;
     const loopMode = 0;
+    const target = this.tatoe.eriHat;
 
-    if (!this.tatoe.eriHat.metadata.isRotated) {
-      BABYLON.Animation.CreateAndStartAnimation("scaleHat", this.tatoe.eriHat,
+    if (!target.metadata.isRotated) {
+      BABYLON.Animation.CreateAndStartAnimation("scaleHat", target,
         "scaling", this.fps, totalFrame,
-        this.tatoe.eriHat.scaling, new BABYLON.Vector3(1.2, 1.2, 1.2), loopMode
+        target.scaling, new BABYLON.Vector3(1.2, 1.2, 1.2), loopMode
       );
-      BABYLON.Animation.CreateAndStartAnimation("rotateHat", this.tatoe.eriHat,
+      BABYLON.Animation.CreateAndStartAnimation("rotateHat", target,
         "rotation.y", this.fps, totalFrame,
-        this.tatoe.eriHat.rotation.y, Math.PI * 2, loopMode
+        target.rotation.y, Math.PI * 2, loopMode
       );
-      BABYLON.Animation.CreateAndStartAnimation("moveHat", this.tatoe.eriHat,
+      BABYLON.Animation.CreateAndStartAnimation("moveHat", target,
         "position.y", this.fps, totalFrame,
-        this.tatoe.eriHat.position.y, 0.3, loopMode
+        target.position.y, 0.3, loopMode
       );
-      this.tatoe.eriHat.metadata.isRotated = true;
+      target.metadata.isRotated = true;
     } else {
-      BABYLON.Animation.CreateAndStartAnimation("scaleHat", this.tatoe.eriHat,
+      BABYLON.Animation.CreateAndStartAnimation("scaleHat", target,
         "scaling", this.fps, totalFrame,
-        this.tatoe.eriHat.scaling, BABYLON.Vector3.One(), loopMode
+        target.scaling, BABYLON.Vector3.One(), loopMode
       );
-      BABYLON.Animation.CreateAndStartAnimation("rotateHat", this.tatoe.eriHat,
-        "rotation.y", this.fps, totalFrame, this.tatoe.eriHat.rotation.y, 0, 0
+      BABYLON.Animation.CreateAndStartAnimation("rotateHat", target,
+        "rotation.y", this.fps, totalFrame, target.rotation.y, 0, 0
       );
-      BABYLON.Animation.CreateAndStartAnimation("moveHat", this.tatoe.eriHat,
+      BABYLON.Animation.CreateAndStartAnimation("moveHat", target,
         "position.y", this.fps, totalFrame,
-        this.tatoe.eriHat.position.y, 0, loopMode
+        target.position.y, 0, loopMode
       );
-      this.tatoe.eriHat.metadata.isRotated = false;
+      target.metadata.isRotated = false;
     }
   }
 
