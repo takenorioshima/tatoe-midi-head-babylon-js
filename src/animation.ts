@@ -12,11 +12,33 @@ export default class Animation {
 
     window.addEventListener("keydown", (e) => {
       console.log(e);
+      if (e.code === "Digit1") {
+        this.moveShape(1);
+      }
+      if (e.code === "Digit2") {
+        this.moveShape(2);
+      }
+      if (e.code === "Digit3") {
+        this.moveShape(3);
+      }
+      if (e.code === "Digit4") {
+        this.moveShape(4);
+      }
       if (e.code === "Digit5") {
         this.rotateTatoe();
+        this.moveShape(5);
+      }
+      if (e.code === "Digit6") {
+        this.moveShape(6);
+      }
+      if (e.code === "Digit7") {
+        this.moveShape(7);
       }
       if (e.code === "Digit8") {
         this.extendGlasses();
+      }
+      if (e.code === "Digit0") {
+        this.moveShape(0);
       }
       if (e.code === "KeyB") {
         this.changeBackgroundColor();
@@ -176,6 +198,50 @@ export default class Animation {
       this.scene.beginAnimation(this.tatoe.takeGlassL, frameLength, 0);
       this.scene.beginAnimation(this.tatoe.takeGlassR, frameLength, 0);
       this.tatoe.takeGlassL.metadata.isExtended = false;
+    }
+  }
+
+  moveShape(shapeIndex: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 = 1) {
+    const objects = [
+      this.tatoe.shapeTa1,
+      this.tatoe.shapeTa2,
+      this.tatoe.shapeTa3,
+      this.tatoe.shapeTo1,
+      this.tatoe.shapeTo2,
+      this.tatoe.shapeE1,
+      this.tatoe.shapeE2,
+      this.tatoe.shapeE3,
+    ];
+    const target = objects[shapeIndex];
+
+    const totalFrame = 30;
+
+    const easingFunction = new BABYLON.CircleEase();
+    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT);
+
+    if (!target.metadata.isAffected) {
+      BABYLON.Animation.CreateAndStartAnimation("scaleShape",
+        target, "scaling", 60, totalFrame,
+        target.scaling,
+        this._randomVector3(0.1, 3),
+        0, easingFunction);
+      BABYLON.Animation.CreateAndStartAnimation("rotateShape",
+        target, "rotation", 60, totalFrame,
+        target.rotation,
+        this._randomVector3(Math.PI * -2, Math.PI * 2),
+        0, easingFunction);
+      target.metadata.isAffected = true;
+    } else {
+      BABYLON.Animation.CreateAndStartAnimation("resetScale",
+        target, "scaling", 60, totalFrame,
+        target.scaling, BABYLON.Vector3.One(),
+        0, easingFunction);
+      BABYLON.Animation.CreateAndStartAnimation("resetRotation",
+        target, "rotation", 60, totalFrame,
+        target.rotation,
+        BABYLON.Vector3.Zero(),
+        0, easingFunction);
+      target.metadata.isAffected = false;
     }
   }
 
@@ -373,6 +439,21 @@ export default class Animation {
 
     this.tatoe.take.metadata.isDissolved = true;
     this.dissolve();
+
+    const shapeMeshes = [
+      this.tatoe.shapeTa1,
+      this.tatoe.shapeTa2,
+      this.tatoe.shapeTa3,
+      this.tatoe.shapeTo1,
+      this.tatoe.shapeTo2,
+      this.tatoe.shapeE1,
+      this.tatoe.shapeE2,
+      this.tatoe.shapeE3,
+    ];
+    shapeMeshes.forEach((mesh) => {
+      BABYLON.Animation.CreateAndStartAnimation("resetShape", mesh, "scaling", 60, 10, mesh.scaling, BABYLON.Vector3.One(), 0);
+      BABYLON.Animation.CreateAndStartAnimation("resetShape", mesh, "rotation", 60, 10, mesh.rotation, BABYLON.Vector3.Zero(), 0);
+    });
 
     this.tatoe.eriEyes.metadata.isSwapped = true;
     this.swapEyes();
