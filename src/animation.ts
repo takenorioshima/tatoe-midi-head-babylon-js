@@ -5,10 +5,12 @@ import Tatoe from './tatoe'
 export default class Animation {
 
   backgroundColorsIndex: number;
+  fps: number;
 
   constructor(public tatoe: Tatoe, public scene: BABYLON.Scene, public camera: BABYLON.ArcRotateCamera, public engine: BABYLON.Engine) {
 
     this.backgroundColorsIndex = 0;
+    this.fps = 60;
 
     window.addEventListener("keydown", (e) => {
       console.log(e);
@@ -178,25 +180,18 @@ export default class Animation {
   }
 
   extendGlasses() {
-    const frameLength = 7;
-
-    if (!this.tatoe.takeGlassL.animations.length) {
-      const s = new BABYLON.Animation("s", "scaling.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
-      s.setKeys([
-        { frame: 0, value: 1 },
-        { frame: frameLength, value: 15 }
-      ]);
-      this.tatoe.takeGlassL.animations.push(s);
-      this.tatoe.takeGlassR.animations.push(s);
-    }
+    const totalFrame = 7;
+    const targets = [this.tatoe.takeGlassL, this.tatoe.takeGlassR];
 
     if (!this.tatoe.takeGlassL.metadata.isExtended) {
-      this.scene.beginAnimation(this.tatoe.takeGlassL, 0, frameLength);
-      this.scene.beginAnimation(this.tatoe.takeGlassR, 0, frameLength);
+      targets.forEach((target) => {
+        BABYLON.Animation.CreateAndStartAnimation("extend", target, "scaling.z", this.fps, totalFrame, target.scaling.z, 15, 0)
+      });
       this.tatoe.takeGlassL.metadata.isExtended = true;
     } else {
-      this.scene.beginAnimation(this.tatoe.takeGlassL, frameLength, 0);
-      this.scene.beginAnimation(this.tatoe.takeGlassR, frameLength, 0);
+      targets.forEach((target) => {
+        BABYLON.Animation.CreateAndStartAnimation("extend", target, "scaling.z", this.fps, totalFrame, target.scaling.z, 1, 0)
+      });
       this.tatoe.takeGlassL.metadata.isExtended = false;
     }
   }
