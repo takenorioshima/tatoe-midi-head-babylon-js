@@ -408,6 +408,13 @@ export default class Animation {
         new BABYLON.Vector3(0.02, 0.02, 0.02),
         0, easingFunction
       );
+      this.tatoe.shape.getChildMeshes().forEach((mesh) => {
+        BABYLON.Animation.CreateAndStartAnimation(
+          "fadeOut", mesh, "visibility", 60, 20,
+          0, 1,
+          0
+        );
+      });
       this.tatoe.metadata.isZoomOut = true;
     } else {
       BABYLON.Animation.CreateAndStartAnimation(
@@ -416,6 +423,13 @@ export default class Animation {
         BABYLON.Vector3.One(),
         0, easingFunction
       );
+      this.tatoe.shape.getChildMeshes().forEach((mesh) => {
+        BABYLON.Animation.CreateAndStartAnimation(
+          "fadeOut", mesh, "visibility", 60, 20,
+          1, 0,
+          0
+        );
+      });
       this.tatoe.metadata.isZoomOut = false;
     }
   }
