@@ -92,35 +92,33 @@ export default class Animation {
   }
 
   changeCameraPosition() {
+    const camera = this.camera;
     const alpha = Math.random() * Math.PI * 2;
     const beta = Math.random() * Math.PI;
-    this.camera.alpha = alpha;
-    this.camera.beta = beta;
 
     const zoom = Math.random() * 2 + 3;
     const rect = this.engine.getRenderingCanvasClientRect();
     const aspect = rect.height / rect.width;
-    this.camera.orthoLeft = -this.camera.radius / zoom;
-    this.camera.orthoRight = this.camera.radius / zoom;
-    this.camera.orthoBottom = -this.camera.radius * aspect / zoom;
-    this.camera.orthoTop = this.camera.radius * aspect / zoom;
+
+    camera.alpha = alpha;
+    camera.beta = beta;
+
+    camera.orthoLeft = -camera.radius / zoom;
+    camera.orthoRight = camera.radius / zoom;
+    camera.orthoBottom = -camera.radius * aspect / zoom;
+    camera.orthoTop = camera.radius * aspect / zoom;
   }
 
   changeMaterial() {
+    const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
+
     if (!this.tatoe.take.metadata.isNormalMaterial) {
-      const normalMaterial = new NormalMaterial("normalMaterial", this.scene);
-      this.tatoe.take.getChildMeshes().forEach((mesh) => {
-        mesh.material = normalMaterial;
-      });
-      this.tatoe.eri.getChildMeshes().forEach((mesh) => {
-        mesh.material = normalMaterial;
+      childMeshes.forEach((mesh) => {
+        mesh.material = new NormalMaterial("normalMaterial", this.scene);
       });
       this.tatoe.take.metadata.isNormalMaterial = true;
     } else {
-      this.tatoe.take.getChildMeshes().forEach((mesh) => {
-        mesh.material = mesh.metadata.initialMaterial;
-      });
-      this.tatoe.eri.getChildMeshes().forEach((mesh) => {
+      childMeshes.forEach((mesh) => {
         mesh.material = mesh.metadata.initialMaterial;
       });
       this.tatoe.take.metadata.isNormalMaterial = false;
@@ -227,9 +225,11 @@ export default class Animation {
 
   rotateTatoe() {
     const totalFrame = 15;
+    const take = this.tatoe.take;
+    const eri = this.tatoe.eri;
 
-    this._animate("rotateTake", this.tatoe.take, "rotation", totalFrame, this.tatoe.take.rotation, this._randomVector3(0, Math.PI * 2));
-    this._animate("rotateEri", this.tatoe.eri, "rotation", totalFrame, this.tatoe.eri.rotation, this._randomVector3(0, Math.PI * 2));
+    this._animate("rotateTake", take, "rotation", totalFrame, take.rotation, this._randomVector3(0, Math.PI * 2));
+    this._animate("rotateEri", eri, "rotation", totalFrame, eri.rotation, this._randomVector3(0, Math.PI * 2));
   }
 
   showWireframes() {
