@@ -1,5 +1,4 @@
 import * as BABYLON from '@babylonjs/core'
-import { ThinSprite } from '@babylonjs/core/Sprites/thinSprite';
 import { NormalMaterial } from '@babylonjs/materials'
 import Tatoe from './tatoe'
 
@@ -234,11 +233,9 @@ export default class Animation {
 
   showWireframes() {
     const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
-    console.log(childMeshes);
 
     if (!this.tatoe.take.metadata.isWireframed) {
       childMeshes.forEach((mesh) => {
-        console.log(mesh);
         mesh.material.wireframe = true;
       });
       this.tatoe.take.metadata.isWireframed = true;
