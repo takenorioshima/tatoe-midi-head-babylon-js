@@ -1,4 +1,5 @@
 import * as BABYLON from '@babylonjs/core'
+import { ThinSprite } from '@babylonjs/core/Sprites/thinSprite';
 import { NormalMaterial } from '@babylonjs/materials'
 import Tatoe from './tatoe'
 
@@ -127,54 +128,23 @@ export default class Animation {
   }
 
   dissolve() {
+    const totalFrame = 30;
     const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
 
     if (!this.tatoe.take.metadata.isDissolved) {
       childMeshes.forEach((mesh) => {
-        let initialPosition: BABYLON.Vector3;
-        initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : BABYLON.Vector3.Zero();
-        BABYLON.Animation.CreateAndStartAnimation(
-          "dissolvePosition", mesh, "position", 60, 30,
-          initialPosition,
-          this._randomVector3(-0.5, 0.5),
-          0, this.easeOutFunction
-        );
-        BABYLON.Animation.CreateAndStartAnimation(
-          "dissolveRotation", mesh, "rotation", 60, 30,
-          BABYLON.Vector3.Zero(),
-          this._randomVector3(0, Math.PI * 2),
-          0, this.easeOutFunction
-        );
-        BABYLON.Animation.CreateAndStartAnimation(
-          "dissolveScaling", mesh, "scaling", 60, 30,
-          BABYLON.Vector3.One(),
-          this._randomVector3(0.2, 2),
-          0, this.easeOutFunction
-        );
+        const initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : BABYLON.Vector3.Zero();
+        this._animate("dissolvePosition", mesh, "position", totalFrame, initialPosition, this._randomVector3(-0.5, 0.5));
+        this._animate("dissolveRotation", mesh, "rotation", totalFrame, BABYLON.Vector3.Zero(), this._randomVector3(0, Math.PI * 2));
+        this._animate("dissolveScaling", mesh, "scaling", totalFrame, BABYLON.Vector3.One(), this._randomVector3(0.2, 2));
       });
       this.tatoe.take.metadata.isDissolved = true;
     } else {
       childMeshes.forEach((mesh) => {
-        let initialPosition: BABYLON.Vector3;
-        initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : BABYLON.Vector3.Zero();
-        BABYLON.Animation.CreateAndStartAnimation(
-          "dissolvePosition", mesh, "position", 60, 30,
-          mesh.position,
-          initialPosition,
-          0, this.easeOutFunction
-        );
-        BABYLON.Animation.CreateAndStartAnimation(
-          "dissolveRotation", mesh, "rotation", 60, 30,
-          mesh.rotation,
-          BABYLON.Vector3.Zero(),
-          0, this.easeOutFunction
-        );
-        BABYLON.Animation.CreateAndStartAnimation(
-          "dissolveScaling", mesh, "scaling", 60, 30,
-          mesh.scaling,
-          BABYLON.Vector3.One(),
-          0, this.easeOutFunction
-        );
+        const initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : BABYLON.Vector3.Zero();
+        this._animate("dissolvePosition", mesh, "position", totalFrame, mesh.position, initialPosition);
+        this._animate("dissolveRotation", mesh, "rotation", totalFrame, mesh.rotation, BABYLON.Vector3.Zero());
+        this._animate("dissolveScaling", mesh, "scaling", totalFrame, mesh.scaling, BABYLON.Vector3.One());
       });
       this.tatoe.take.metadata.isDissolved = false;
     }
@@ -186,19 +156,20 @@ export default class Animation {
 
     if (!this.tatoe.takeGlassL.metadata.isExtended) {
       targets.forEach((target) => {
-        BABYLON.Animation.CreateAndStartAnimation("extend", target, "scaling.z", this.fps, totalFrame, target.scaling.z, 15, 0)
+        this._animate("extend", target, "scaling.z", totalFrame, target.scaling.z, 15);
       });
       this.tatoe.takeGlassL.metadata.isExtended = true;
     } else {
       targets.forEach((target) => {
-        BABYLON.Animation.CreateAndStartAnimation("extend", target, "scaling.z", this.fps, totalFrame, target.scaling.z, 1, 0)
+        this._animate("extend", target, "scaling.z", totalFrame, target.scaling.z, 1);
       });
       this.tatoe.takeGlassL.metadata.isExtended = false;
     }
   }
 
   moveShape(shapeIndex: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 = 1) {
-    const objects = [
+    const totalFrame = 30;
+    const targets = [
       this.tatoe.shapeTa1,
       this.tatoe.shapeTa2,
       this.tatoe.shapeTa3,
@@ -208,122 +179,57 @@ export default class Animation {
       this.tatoe.shapeE2,
       this.tatoe.shapeE3,
     ];
-    const target = objects[shapeIndex];
-
-    const totalFrame = 30;
+    const target = targets[shapeIndex];
 
     if (!target.metadata.isAffected) {
-      BABYLON.Animation.CreateAndStartAnimation("scaleShape",
-        target, "scaling", 60, totalFrame,
-        target.scaling,
-        this._randomVector3(0.1, 3),
-        0, this.easeOutFunction);
-      BABYLON.Animation.CreateAndStartAnimation("rotateShape",
-        target, "rotation", 60, totalFrame,
-        target.rotation,
-        this._randomVector3(Math.PI * -2, Math.PI * 2),
-        0, this.easeOutFunction);
+      this._animate("scaleShape", target, "scaling", totalFrame, target.scaling, this._randomVector3(0.1, 3));
+      this._animate("rotateShape", target, "rotation", totalFrame, target.rotation, this._randomVector3(Math.PI * -2, Math.PI * 2));
       target.metadata.isAffected = true;
     } else {
-      BABYLON.Animation.CreateAndStartAnimation("resetScale",
-        target, "scaling", 60, totalFrame,
-        target.scaling, BABYLON.Vector3.One(),
-        0, this.easeOutFunction);
-      BABYLON.Animation.CreateAndStartAnimation("resetRotation",
-        target, "rotation", 60, totalFrame,
-        target.rotation,
-        BABYLON.Vector3.Zero(),
-        0, this.easeOutFunction);
+      this._animate("scaleShape", target, "scaling", totalFrame, target.scaling, BABYLON.Vector3.One());
+      this._animate("rotateShape", target, "rotation", totalFrame, target.rotation, BABYLON.Vector3.Zero());
       target.metadata.isAffected = false;
     }
   }
 
   rotateHat() {
     const totalFrame = 15;
-    const loopMode = 0;
     const target = this.tatoe.eriHat;
 
     if (!target.metadata.isRotated) {
-      BABYLON.Animation.CreateAndStartAnimation("scaleHat", target,
-        "scaling", this.fps, totalFrame,
-        target.scaling, new BABYLON.Vector3(1.2, 1.2, 1.2), loopMode
-      );
-      BABYLON.Animation.CreateAndStartAnimation("rotateHat", target,
-        "rotation.y", this.fps, totalFrame,
-        target.rotation.y, Math.PI * 2, loopMode
-      );
-      BABYLON.Animation.CreateAndStartAnimation("moveHat", target,
-        "position.y", this.fps, totalFrame,
-        target.position.y, 0.3, loopMode
-      );
+      this._animate("scaleHat", target, "scaling", totalFrame, target.scaling, new BABYLON.Vector3(1.2, 1.2, 1.2));
+      this._animate("rotateHat", target, "rotation.y", totalFrame, target.rotation.y, Math.PI * 2);
+      this._animate("moveHat", target, "position.y", totalFrame, target.position.y, 0.3);
       target.metadata.isRotated = true;
     } else {
-      BABYLON.Animation.CreateAndStartAnimation("scaleHat", target,
-        "scaling", this.fps, totalFrame,
-        target.scaling, BABYLON.Vector3.One(), loopMode
-      );
-      BABYLON.Animation.CreateAndStartAnimation("rotateHat", target,
-        "rotation.y", this.fps, totalFrame, target.rotation.y, 0, 0
-      );
-      BABYLON.Animation.CreateAndStartAnimation("moveHat", target,
-        "position.y", this.fps, totalFrame,
-        target.position.y, 0, loopMode
-      );
+      this._animate("scaleHat", target, "scaling", totalFrame, target.scaling, BABYLON.Vector3.One());
+      this._animate("rotateHat", target, "rotation.y", totalFrame, target.rotation.y, 0);
+      this._animate("moveHat", target, "position.y", totalFrame, target.position.y, 0);
       target.metadata.isRotated = false;
     }
   }
 
   rotateLips() {
-    const frameLength = 15;
+    const totalFrame = 15;
+    const lipTop = this.tatoe.takeLipTop;
+    const lipBottom = this.tatoe.takeLipBottom;
 
-    if (!this.tatoe.takeLipTop.animations.length) {
-      const r = new BABYLON.Animation("r", "rotation.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT);
-      r.setKeys([
-        { frame: 0, value: 0 },
-        { frame: frameLength, value: Math.PI * 2 }
-      ]);
-      this.tatoe.takeLipTop.animations.push(r);
-      this.tatoe.takeLipBottom.animations.push(r);
-    }
-
-    if (!this.tatoe.takeLipTop.metadata.isRotated) {
-      this.scene.beginAnimation(this.tatoe.takeLipTop, 0, frameLength);
-      this.scene.beginAnimation(this.tatoe.takeLipBottom, frameLength, 0);
-      this.tatoe.takeLipTop.metadata.isRotated = true;
+    if (!lipTop.metadata.isRotated) {
+      this._animate("rotateLipTop", lipTop, "rotation.y", totalFrame, lipTop.rotation.y, Math.PI * 2);
+      this._animate("rotateLipBottom", lipBottom, "rotation.y", totalFrame, lipBottom.rotation.y, -Math.PI * 2);
+      lipTop.metadata.isRotated = true;
     } else {
-      this.scene.beginAnimation(this.tatoe.takeLipTop, frameLength, 0);
-      this.scene.beginAnimation(this.tatoe.takeLipBottom, 0, frameLength);
+      this._animate("rotateLip", lipTop, "rotation.y", totalFrame, lipTop.rotation.y, 0);
+      this._animate("rotateLipBottom", lipBottom, "rotation.y", totalFrame, lipBottom.rotation.y, 0);
       this.tatoe.takeLipTop.metadata.isRotated = false;
     }
-
   }
 
   rotateTatoe() {
-    this.tatoe.take.animations = this.tatoe.take.animations.filter((v) => {
-      if (v.name === "randomRotation") return false;
-    });
-    this.tatoe.eri.animations = this.tatoe.eri.animations.filter((v) => {
-      if (v.name === "randomRotation") return false;
-    });
+    const totalFrame = 15;
 
-    const frameLength = 15;
-
-    const randomRotation = new BABYLON.Animation("randomRotation", "rotation", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
-    const takeRandomRotation = randomRotation.clone();
-    const eriRandomRotation = randomRotation.clone();
-    takeRandomRotation.setKeys([
-      { frame: 0, value: this.tatoe.take.rotation },
-      { frame: frameLength, value: new BABYLON.Vector3(Math.random() * 3, Math.random() * 3, Math.random() * 3) }
-    ])
-    this.tatoe.take.animations.push(takeRandomRotation);
-    eriRandomRotation.setKeys([
-      { frame: 0, value: this.tatoe.eri.rotation },
-      { frame: frameLength, value: new BABYLON.Vector3(Math.random() * 3, Math.random() * 3, Math.random() * 3) }
-    ])
-    this.tatoe.eri.animations.push(eriRandomRotation);
-
-    this.scene.beginAnimation(this.tatoe.take, 0, frameLength);
-    this.scene.beginAnimation(this.tatoe.eri, 0, frameLength);
+    this._animate("rotateTake", this.tatoe.take, "rotation", totalFrame, this.tatoe.take.rotation, this._randomVector3(0, Math.PI * 2));
+    this._animate("rotateEri", this.tatoe.eri, "rotation", totalFrame, this.tatoe.eri.rotation, this._randomVector3(0, Math.PI * 2));
   }
 
   showWireframes() {
@@ -346,23 +252,17 @@ export default class Animation {
   }
 
   shrinkHeads() {
-    const frameLength = 7;
-    if (!this.tatoe.takeHead.animations.find((v) => { v.name === "shirinkHead" })) {
-      const shrinkHead = new BABYLON.Animation("shirinkHead", "scaling", 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3);
-      shrinkHead.setKeys([
-        { frame: 0, value: BABYLON.Vector3.One() },
-        { frame: frameLength, value: BABYLON.Vector3.Zero() }
-      ]);
-      this.tatoe.takeHead.animations.push(shrinkHead);
-      this.tatoe.eriHead.animations.push(shrinkHead);
-    }
+    const totalFrame = 7;
+    const takeHead = this.tatoe.takeHead;
+    const eriHead = this.tatoe.eriHead;
+
     if (!this.tatoe.takeHead.metadata.isShrinked) {
-      this.scene.beginAnimation(this.tatoe.takeHead, 0, frameLength);
-      this.scene.beginAnimation(this.tatoe.eriHead, 0, frameLength);
+      this._animate("shrinkTakeHead", takeHead, "scaling", totalFrame, this.tatoe.takeHead.scaling, BABYLON.Vector3.Zero());
+      this._animate("shrinkEriHead", eriHead, "scaling", totalFrame, this.tatoe.eriHead.scaling, BABYLON.Vector3.Zero());
       this.tatoe.takeHead.metadata.isShrinked = true;
     } else {
-      this.scene.beginAnimation(this.tatoe.takeHead, frameLength, 0);
-      this.scene.beginAnimation(this.tatoe.eriHead, frameLength, 0);
+      this._animate("unshrinkTakeHead", takeHead, "scaling", totalFrame, this.tatoe.takeHead.scaling, BABYLON.Vector3.One());
+      this._animate("unshrinkEriHead", eriHead, "scaling", totalFrame, this.tatoe.eriHead.scaling, BABYLON.Vector3.One());
       this.tatoe.takeHead.metadata.isShrinked = false;
     }
   }
@@ -390,35 +290,18 @@ export default class Animation {
   }
 
   zoomOut() {
+    const totalFrame = 60;
 
     if (!this.tatoe.metadata.isZoomOut) {
-      BABYLON.Animation.CreateAndStartAnimation(
-        "zoomOut", this.tatoe, "scaling", 60, 60,
-        this.tatoe.scaling,
-        new BABYLON.Vector3(0.02, 0.02, 0.02),
-        0, this.easeOutFunction
-      );
+      this._animate("zoomOut", this.tatoe, "scaling", totalFrame, this.tatoe.scaling, new BABYLON.Vector3(0.02, 0.02, 0.02));
       this.tatoe.shape.getChildMeshes().forEach((mesh) => {
-        BABYLON.Animation.CreateAndStartAnimation(
-          "fadeOut", mesh, "visibility", 60, 20,
-          0, 1,
-          0
-        );
+        this._animate("fadeIn", mesh, "visibility", 20, 0, 1);
       });
       this.tatoe.metadata.isZoomOut = true;
     } else {
-      BABYLON.Animation.CreateAndStartAnimation(
-        "zoomIn", this.tatoe, "scaling", 60, 60,
-        this.tatoe.scaling,
-        BABYLON.Vector3.One(),
-        0, this.easeOutFunction
-      );
+      this._animate("zoomIn", this.tatoe, "scaling", totalFrame, this.tatoe.scaling, BABYLON.Vector3.One());
       this.tatoe.shape.getChildMeshes().forEach((mesh) => {
-        BABYLON.Animation.CreateAndStartAnimation(
-          "fadeOut", mesh, "visibility", 60, 20,
-          1, 0,
-          0
-        );
+        this._animate("fadeOut", mesh, "visibility", 20, 1, 0);
       });
       this.tatoe.metadata.isZoomOut = false;
     }
@@ -455,8 +338,8 @@ export default class Animation {
       this.tatoe.shapeE3,
     ];
     shapeMeshes.forEach((mesh) => {
-      BABYLON.Animation.CreateAndStartAnimation("resetShape", mesh, "scaling", 60, 10, mesh.scaling, BABYLON.Vector3.One(), 0);
-      BABYLON.Animation.CreateAndStartAnimation("resetShape", mesh, "rotation", 60, 10, mesh.rotation, BABYLON.Vector3.Zero(), 0);
+      this._animate("resetShape", mesh, "scaling", 10, mesh.scaling, BABYLON.Vector3.One());
+      this._animate("resetShape", mesh, "rotation", 10, mesh.rotation, BABYLON.Vector3.Zero());
     });
 
     this.tatoe.eriEyes.metadata.isSwapped = true;
@@ -464,6 +347,11 @@ export default class Animation {
 
     this.tatoe.take.metadata.isNormalMaterial = true;
     this.changeMaterial();
+  }
+
+  private _animate(name: string, target: any, targetProperty: string, totalFrame: number, from: any, to: any, easingFunction?: BABYLON.CircleEase) {
+    easingFunction = easingFunction ? easingFunction : this.easeOutFunction;
+    BABYLON.Animation.CreateAndStartAnimation(name, target, targetProperty, this.fps, totalFrame, from, to, 0, easingFunction);
   }
 
   private _randomVector3(min: number, max: number) {
