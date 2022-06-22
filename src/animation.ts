@@ -6,11 +6,14 @@ export default class Animation {
 
   backgroundColorsIndex: number;
   fps: number;
+  easeOutFunction: BABYLON.CircleEase;
 
   constructor(public tatoe: Tatoe, public scene: BABYLON.Scene, public camera: BABYLON.ArcRotateCamera, public engine: BABYLON.Engine) {
 
     this.backgroundColorsIndex = 0;
     this.fps = 60;
+    this.easeOutFunction = new BABYLON.CircleEase();
+    this.easeOutFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT);
 
     window.addEventListener("keydown", (e) => {
       console.log(e);
@@ -124,8 +127,6 @@ export default class Animation {
   }
 
   dissolve() {
-    const easingFunction = new BABYLON.CircleEase();
-    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
     const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
 
     if (!this.tatoe.take.metadata.isDissolved) {
@@ -136,19 +137,19 @@ export default class Animation {
           "dissolvePosition", mesh, "position", 60, 30,
           initialPosition,
           this._randomVector3(-0.5, 0.5),
-          0, easingFunction
+          0, this.easeOutFunction
         );
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveRotation", mesh, "rotation", 60, 30,
           BABYLON.Vector3.Zero(),
           this._randomVector3(0, Math.PI * 2),
-          0, easingFunction
+          0, this.easeOutFunction
         );
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveScaling", mesh, "scaling", 60, 30,
           BABYLON.Vector3.One(),
           this._randomVector3(0.2, 2),
-          0, easingFunction
+          0, this.easeOutFunction
         );
       });
       this.tatoe.take.metadata.isDissolved = true;
@@ -160,19 +161,19 @@ export default class Animation {
           "dissolvePosition", mesh, "position", 60, 30,
           mesh.position,
           initialPosition,
-          0, easingFunction
+          0, this.easeOutFunction
         );
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveRotation", mesh, "rotation", 60, 30,
           mesh.rotation,
           BABYLON.Vector3.Zero(),
-          0, easingFunction
+          0, this.easeOutFunction
         );
         BABYLON.Animation.CreateAndStartAnimation(
           "dissolveScaling", mesh, "scaling", 60, 30,
           mesh.scaling,
           BABYLON.Vector3.One(),
-          0, easingFunction
+          0, this.easeOutFunction
         );
       });
       this.tatoe.take.metadata.isDissolved = false;
@@ -211,31 +212,28 @@ export default class Animation {
 
     const totalFrame = 30;
 
-    const easingFunction = new BABYLON.CircleEase();
-    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT);
-
     if (!target.metadata.isAffected) {
       BABYLON.Animation.CreateAndStartAnimation("scaleShape",
         target, "scaling", 60, totalFrame,
         target.scaling,
         this._randomVector3(0.1, 3),
-        0, easingFunction);
+        0, this.easeOutFunction);
       BABYLON.Animation.CreateAndStartAnimation("rotateShape",
         target, "rotation", 60, totalFrame,
         target.rotation,
         this._randomVector3(Math.PI * -2, Math.PI * 2),
-        0, easingFunction);
+        0, this.easeOutFunction);
       target.metadata.isAffected = true;
     } else {
       BABYLON.Animation.CreateAndStartAnimation("resetScale",
         target, "scaling", 60, totalFrame,
         target.scaling, BABYLON.Vector3.One(),
-        0, easingFunction);
+        0, this.easeOutFunction);
       BABYLON.Animation.CreateAndStartAnimation("resetRotation",
         target, "rotation", 60, totalFrame,
         target.rotation,
         BABYLON.Vector3.Zero(),
-        0, easingFunction);
+        0, this.easeOutFunction);
       target.metadata.isAffected = false;
     }
   }
@@ -392,15 +390,13 @@ export default class Animation {
   }
 
   zoomOut() {
-    const easingFunction = new BABYLON.CircleEase();
-    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
 
     if (!this.tatoe.metadata.isZoomOut) {
       BABYLON.Animation.CreateAndStartAnimation(
         "zoomOut", this.tatoe, "scaling", 60, 60,
         this.tatoe.scaling,
         new BABYLON.Vector3(0.02, 0.02, 0.02),
-        0, easingFunction
+        0, this.easeOutFunction
       );
       this.tatoe.shape.getChildMeshes().forEach((mesh) => {
         BABYLON.Animation.CreateAndStartAnimation(
@@ -415,7 +411,7 @@ export default class Animation {
         "zoomIn", this.tatoe, "scaling", 60, 60,
         this.tatoe.scaling,
         BABYLON.Vector3.One(),
-        0, easingFunction
+        0, this.easeOutFunction
       );
       this.tatoe.shape.getChildMeshes().forEach((mesh) => {
         BABYLON.Animation.CreateAndStartAnimation(
