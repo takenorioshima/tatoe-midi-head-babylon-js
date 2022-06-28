@@ -60,6 +60,9 @@ export default class Animation {
       if (e.code === "KeyH") {
         this.rotateHat();
       }
+      if (e.code === "KeyK") {
+        this.bounce();
+      }
       if (e.code === "KeyL") {
         this.rotateLips();
       }
@@ -79,6 +82,18 @@ export default class Animation {
         this.reset();
       }
     });
+  }
+
+  bounce() {
+    const totalFrame = 20;
+    const tatoe = [this.tatoe.take, this.tatoe.eri];
+
+    tatoe.forEach((target) => {
+      this._animate("bounce", target, "scaling", totalFrame, new BABYLON.Vector3(1.3, 1.3, 1.3), BABYLON.Vector3.One(), this.easeOutFunction);
+    });
+
+    const shape = this.tatoe.shape;
+    this._animate("bounce", shape, "scaling", totalFrame, new BABYLON.Vector3(60, 60, 60), new BABYLON.Vector3(50, 50, 50), this.easeOutFunction);
   }
 
   changeBackgroundColor() {
