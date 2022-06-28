@@ -344,6 +344,9 @@ export default class Animation {
     this.tatoe.eriEyes.metadata.isSwapped = true;
     this.swapEyes();
 
+    this.tatoe.take.metadata.isWireframed = true;
+    this.showWireframes();
+
     this.tatoe.take.metadata.isNormalMaterial = true;
     this.changeMaterial();
   }
