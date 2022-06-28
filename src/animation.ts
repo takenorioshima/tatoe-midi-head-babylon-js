@@ -294,12 +294,14 @@ export default class Animation {
       this.tatoe.shape.getChildMeshes().forEach((mesh) => {
         this._animate("fadeIn", mesh, "visibility", 20, 0, 1);
       });
+      this._animate("fadeIn", this.tatoe.skybox, "visibility", 40, this.tatoe.skybox.visibility, 1);
       this.tatoe.metadata.isZoomOut = true;
     } else {
       this._animate("zoomIn", this.tatoe, "scaling", totalFrame, this.tatoe.scaling, BABYLON.Vector3.One());
       this.tatoe.shape.getChildMeshes().forEach((mesh) => {
         this._animate("fadeOut", mesh, "visibility", 20, 1, 0);
       });
+      this._animate("fadeIn", this.tatoe.skybox, "visibility", 40, this.tatoe.skybox.visibility, 0);
       this.tatoe.metadata.isZoomOut = false;
     }
   }

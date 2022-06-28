@@ -37,6 +37,8 @@ export default class Tatoe extends BABYLON.AbstractMesh {
   shapeE3: BABYLON.AbstractMesh;
   shapeE4: BABYLON.AbstractMesh;
 
+  skybox: BABYLON.AbstractMesh;
+
   isTakeLoaded: boolean;
   isEriLoaded: boolean;
   isShapeLoaded: boolean;
@@ -175,5 +177,15 @@ export default class Tatoe extends BABYLON.AbstractMesh {
         this.isShapeLoaded = true;
       })
       .catch(console.error);
+
+    this.skybox = BABYLON.MeshBuilder.CreateBox("skybox", { size: 5 }, this.scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial("skybox", this.scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", this.scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    this.skybox.material = skyboxMaterial;
+    this.skybox.visibility = 0;
   }
 }
