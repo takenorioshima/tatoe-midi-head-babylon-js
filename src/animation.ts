@@ -1,6 +1,7 @@
 import * as BABYLON from '@babylonjs/core'
 import { NormalMaterial } from '@babylonjs/materials'
 import Tatoe from './tatoe'
+import { WebMidi } from 'webmidi'
 
 export default class Animation {
 
@@ -14,6 +15,96 @@ export default class Animation {
     this.fps = 60;
     this.easeOutFunction = new BABYLON.CircleEase();
     this.easeOutFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT);
+
+    /**
+     * Detect MIDI device.
+     */
+
+    const onMidiEnabled = () => {
+      let midiInput;
+      const pisoundMidiInputName = "pisound MIDI PS-2ZF0Y18";
+
+      if (WebMidi.inputs.length < 1) {
+        console.log('[tatoe] No MIDI device detected.');
+      } else {
+        if (WebMidi.getInputByName(pisoundMidiInputName)) {
+          midiInput = WebMidi.getInputByName(pisoundMidiInputName);
+        } else {
+          midiInput = WebMidi.getInputByName(WebMidi.inputs[0].name);
+        }
+        console.log(`[tatoe] ${midiInput.name} was detected.`);
+      }
+
+      /**
+       * Listen MIDI events.
+       */
+
+      midiInput.addListener("noteon", (e) => {
+        const numberOfAnimations = 13
+        const noteGroup = e.note.number % numberOfAnimations;
+        console.log(`[tatoe] note.number = ${e.note.number} | noteGroup = ${noteGroup}`);
+
+        if (e.note.number == 36) {
+          this.reset();
+        } else {
+          if (noteGroup == 1) {
+            this.bounce();
+            this.moveShape(1);
+          }
+          if (noteGroup == 2) {
+            this.rotateTatoe();
+            this.moveShape(2);
+          }
+          if (noteGroup == 3) {
+            this.rotateLips();
+            this.changeBackgroundColor();
+            this.moveShape(3);
+          }
+          if (noteGroup == 4) {
+            this.changeMaterial();
+            this.moveShape(4);
+          }
+          if (noteGroup == 5) {
+            this.changeMaterial();
+            this.moveShape(5);
+          }
+          if (noteGroup == 6) {
+            this.extendGlasses();
+            this.moveShape(6);
+          }
+          if (noteGroup == 7) {
+            this.rotateHat();
+            this.moveShape(7);
+          }
+          if (noteGroup == 8) {
+            this.shrinkHeads();
+          }
+          if (noteGroup == 9) {
+            this.swapEyes();
+            this.changeBackgroundColor();
+          }
+          if (noteGroup == 10) {
+            this.rotateTatoe();
+          }
+          if (noteGroup == 11) {
+            this.showWireframes();
+          }
+          if (noteGroup == 12) {
+            this.changeBackgroundColor();
+          }
+          if (noteGroup % 3 == 0) {
+            this.changeCameraPosition();
+          }
+          if (noteGroup % 4 == 0) {
+            this.dissolve();
+          }
+          if (noteGroup % 5 == 0) {
+            this.zoomOut();
+          }
+        }
+      });
+    }
+    WebMidi.enable().then(onMidiEnabled).catch(error => console.log(error));
 
     window.addEventListener("keydown", (e) => {
       console.log(e);
