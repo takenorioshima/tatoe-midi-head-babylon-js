@@ -46,6 +46,8 @@ export default class Animation {
 
         if (e.note.number == 36) {
           this.reset();
+        } else if (e.note.number == 96) {
+          this.zoomOut();
         } else {
           if (noteGroup == 1) {
             this.bounce();
@@ -92,14 +94,11 @@ export default class Animation {
           if (noteGroup == 12) {
             this.changeBackgroundColor();
           }
-          if (noteGroup % 3 == 0) {
+          if (noteGroup % 7 == 0) {
             this.changeCameraPosition();
           }
-          if (noteGroup % 4 == 0) {
+          if (noteGroup % 22 == 0) {
             this.dissolve();
-          }
-          if (noteGroup % 5 == 0) {
-            this.zoomOut();
           }
         }
       });
