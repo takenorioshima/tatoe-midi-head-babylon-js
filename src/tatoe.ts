@@ -89,16 +89,16 @@ export default class Tatoe extends BABYLON.AbstractMesh {
         this.take.metadata = {
           isNormalMaterial: false,
           isWireframed: false,
-          isZoomOut: false
+          isZoomOut: false,
+          initialScale: new BABYLON.Vector3(2, 2, 2)
         }
 
         this.takeGlassL.metadata.isExtended = false;
         this.takeLipTop.metadata.isRotated = false;
         this.takeHead.metadata.isShrinked = false;
 
-        this.take.scaling = BABYLON.Vector3.One();
+        this.take.scaling = this.take.metadata.initialScale;
         this.take.rotation = BABYLON.Vector3.Zero();
-        this.take.position = new BABYLON.Vector3(-0.375, -0.1, 0);
         this.takeYellowCap.setEnabled(false);
 
         this.take.parent = this;
@@ -106,90 +106,5 @@ export default class Tatoe extends BABYLON.AbstractMesh {
         this.isTakeLoaded = true;
       })
       .catch(console.error);
-
-    BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "eri.glb", scene)
-      .then((result) => {
-
-        this.eri = result.meshes[0];
-        this.eri.name = "eri";
-
-        const childMeshes = this.eri.getChildMeshes();
-
-        this.eriEyes = childMeshes[0];
-        this.eriHair = childMeshes[1];
-        this.eriHat = childMeshes[2];
-        this.eriHead = childMeshes[3];
-        this.eriStrow = childMeshes[4];
-        this.eriNose = childMeshes[5];
-        this.eriEarL = childMeshes[6];
-        this.eriEarR = childMeshes[7];
-        this.eriCheese = childMeshes[8];
-
-        this.eriEyes.rotationQuaternion = null;
-        this.eriHair.rotationQuaternion = null;
-        this.eriHat.rotationQuaternion = null;
-        this.eriHead.rotationQuaternion = null;
-        this.eriStrow.rotationQuaternion = null;
-        this.eriNose.rotationQuaternion = null;
-        this.eriEarL.rotationQuaternion = null;
-        this.eriEarR.rotationQuaternion = null;
-        this.eriCheese.rotationQuaternion = null;
-
-        childMeshes.forEach((mesh) => {
-          (mesh.material as BABYLON.StandardMaterial).ambientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
-          mesh.metadata.initialMaterial = mesh.material.clone("initialMaterial");
-        });
-
-        this.eriHat.metadata.isRotated = false;
-        this.eriEyes.metadata.isSwapped = false;
-
-        this.eri.scaling = BABYLON.Vector3.One();
-        this.eri.rotation = BABYLON.Vector3.Zero();
-        this.eri.position = new BABYLON.Vector3(0.375, -0.1, 0);
-        this.eriCheese.setEnabled(false);
-
-        this.eri.parent = this;
-
-        this.isEriLoaded = true;
-      })
-      .catch(console.error);
-
-    BABYLON.SceneLoader.ImportMeshAsync('', "./models/", "shape.glb", scene)
-      .then((result) => {
-        this.shape = result.meshes[0];
-        this.shape.name = "shape";
-        this.shape.scaling = new BABYLON.Vector3(50, 50, 50);
-
-        const childMeshes = this.shape.getChildMeshes();
-        childMeshes.forEach((mesh, i) => {
-          console.log(`[${i}] ${mesh.id}`);
-          (mesh.material as BABYLON.StandardMaterial).ambientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
-        })
-
-        this.shapeTa1 = childMeshes[0];
-        this.shapeTa2 = childMeshes[1];
-        this.shapeTa3 = childMeshes[2];
-        this.shapeTo1 = childMeshes[4];
-        this.shapeTo2 = childMeshes[7];
-        this.shapeE1 = childMeshes[3];
-        this.shapeE2 = childMeshes[6];
-        this.shapeE3 = childMeshes[9];
-        this.shapeE4 = childMeshes[5];
-
-        this.shape.parent = this;
-
-        this.isShapeLoaded = true;
-      })
-      .catch(console.error);
-
-    this.skybox = BABYLON.MeshBuilder.CreateBox("skybox", { size: 5 }, this.scene);
-    const skyboxMaterial = new BABYLON.StandardMaterial("skybox", this.scene);
-    skyboxMaterial.backFaceCulling = false;
-    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./textures/skybox", this.scene);
-    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-    this.skybox.material = skyboxMaterial;
-    this.skybox.visibility = 0;
   }
 }

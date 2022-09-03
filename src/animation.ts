@@ -1,7 +1,7 @@
 import * as BABYLON from '@babylonjs/core'
+import { refractionPixelShader } from '@babylonjs/core/Shaders/refraction.fragment';
 import { NormalMaterial } from '@babylonjs/materials'
 import Tatoe from './tatoe'
-import { WebMidi } from 'webmidi'
 
 export default class Animation {
 
@@ -16,125 +16,13 @@ export default class Animation {
     this.easeOutFunction = new BABYLON.CircleEase();
     this.easeOutFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT);
 
-    /**
-     * Detect MIDI device.
-     */
-
-    const onMidiEnabled = () => {
-      let midiInput;
-      const pisoundMidiInputName = "pisound MIDI PS-2ZF0Y18";
-
-      if (WebMidi.inputs.length < 1) {
-        console.log('[tatoe] No MIDI device detected.');
-      } else {
-        if (WebMidi.getInputByName(pisoundMidiInputName)) {
-          midiInput = WebMidi.getInputByName(pisoundMidiInputName);
-        } else {
-          midiInput = WebMidi.getInputByName(WebMidi.inputs[0].name);
-        }
-        console.log(`[tatoe] ${midiInput.name} was detected.`);
-      }
-
-      /**
-       * Listen MIDI events.
-       */
-
-      midiInput.addListener("noteon", (e) => {
-        const numberOfAnimations = 13
-        const noteGroup = e.note.number % numberOfAnimations;
-        console.log(`[tatoe] note.number = ${e.note.number} | noteGroup = ${noteGroup}`);
-
-        if (e.note.number == 36) {
-          this.reset();
-        } else {
-          if (noteGroup == 1) {
-            this.bounce();
-            this.moveShape(1);
-          }
-          if (noteGroup == 2) {
-            this.rotateTatoe();
-            this.moveShape(2);
-          }
-          if (noteGroup == 3) {
-            this.rotateLips();
-            this.changeBackgroundColor();
-            this.moveShape(3);
-          }
-          if (noteGroup == 4) {
-            this.changeMaterial();
-            this.moveShape(4);
-          }
-          if (noteGroup == 5) {
-            this.changeMaterial();
-            this.moveShape(5);
-          }
-          if (noteGroup == 6) {
-            this.extendGlasses();
-            this.moveShape(6);
-          }
-          if (noteGroup == 7) {
-            this.rotateHat();
-            this.moveShape(7);
-          }
-          if (noteGroup == 8) {
-            this.shrinkHeads();
-          }
-          if (noteGroup == 9) {
-            this.swapEyes();
-            this.changeBackgroundColor();
-          }
-          if (noteGroup == 10) {
-            this.rotateTatoe();
-          }
-          if (noteGroup == 11) {
-            this.showWireframes();
-          }
-          if (noteGroup == 12) {
-            this.changeBackgroundColor();
-          }
-          if (noteGroup % 3 == 0) {
-            this.changeCameraPosition();
-          }
-          if (noteGroup % 4 == 0) {
-            this.dissolve();
-          }
-          if (noteGroup % 5 == 0) {
-            this.zoomOut();
-          }
-        }
-      });
-    }
-    WebMidi.enable().then(onMidiEnabled).catch(error => console.log(error));
-
     window.addEventListener("keydown", (e) => {
       console.log(e);
-      if (e.code === "Digit1") {
-        this.moveShape(1);
-      }
-      if (e.code === "Digit2") {
-        this.moveShape(2);
-      }
-      if (e.code === "Digit3") {
-        this.moveShape(3);
-      }
-      if (e.code === "Digit4") {
-        this.moveShape(4);
-      }
       if (e.code === "Digit5") {
         this.rotateTatoe();
-        this.moveShape(5);
-      }
-      if (e.code === "Digit6") {
-        this.moveShape(6);
-      }
-      if (e.code === "Digit7") {
-        this.moveShape(7);
       }
       if (e.code === "Digit8") {
         this.extendGlasses();
-      }
-      if (e.code === "Digit0") {
-        this.moveShape(0);
       }
       if (e.code === "KeyB") {
         this.changeBackgroundColor();
@@ -144,12 +32,6 @@ export default class Animation {
       }
       if (e.code === "KeyD") {
         this.dissolve();
-      }
-      if (e.code === "KeyE") {
-        this.swapEyes();
-      }
-      if (e.code === "KeyH") {
-        this.rotateHat();
       }
       if (e.code === "KeyK") {
         this.bounce();
@@ -173,18 +55,60 @@ export default class Animation {
         this.reset();
       }
     });
+
+    const randomAnimationA = setInterval(() => {
+      const number = Math.floor(Math.random() * 6);
+      switch (number) {
+        case 0:
+          this.extendGlasses();
+          this.rotateTatoe();
+          this.showWireframes();
+        case 1:
+          this.rotateLips();
+          this.shrinkHeads();
+        case 2:
+          this.extendGlasses();
+          this.rotateLips();
+          this.showWireframes();
+          this.shrinkHeads();
+        case 3:
+          this.changeMaterial();
+          this.dissolve();
+          this.rotateLips();
+        case 4:
+          this.rotateTatoe();
+          this.showWireframes();
+        default:
+          break;
+      }
+      this.dissolve();
+    }, 2000);
+
+    const randomAnimationB = setInterval(() => {
+      const number = Math.floor(Math.random() * 5);
+      switch (number) {
+        case 0:
+          this.changeCameraPosition();
+        case 1:
+          this.changeBackgroundColor();
+        case 2:
+          this.changeBackgroundColor();
+          this.changeCameraPosition();
+        default:
+          break;
+      }
+      this.dissolve();
+    }, 1500);
+
   }
 
   bounce() {
     const totalFrame = 20;
-    const tatoe = [this.tatoe.take, this.tatoe.eri];
+    const tatoe = [this.tatoe.take];
 
     tatoe.forEach((target) => {
-      this._animate("bounce", target, "scaling", totalFrame, new BABYLON.Vector3(1.3, 1.3, 1.3), BABYLON.Vector3.One(), this.easeOutFunction);
+      this._animate("bounce", target, "scaling", totalFrame, new BABYLON.Vector3(1.3, 1.3, 1.3), target.metadata.initialScale, this.easeOutFunction);
     });
-
-    const shape = this.tatoe.shape;
-    this._animate("bounce", shape, "scaling", totalFrame, new BABYLON.Vector3(60, 60, 60), new BABYLON.Vector3(50, 50, 50), this.easeOutFunction);
   }
 
   changeBackgroundColor() {
@@ -215,7 +139,7 @@ export default class Animation {
   }
 
   changeMaterial() {
-    const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
+    const childMeshes = this.tatoe.take.getChildMeshes();
 
     if (!this.tatoe.take.metadata.isNormalMaterial) {
       childMeshes.forEach((mesh) => {
@@ -232,14 +156,14 @@ export default class Animation {
 
   dissolve() {
     const totalFrame = 30;
-    const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
+    const childMeshes = this.tatoe.take.getChildMeshes();
 
     if (!this.tatoe.take.metadata.isDissolved) {
       childMeshes.forEach((mesh) => {
         const initialPosition = mesh.metadata.initialPosition ? mesh.metadata.initialPosition : BABYLON.Vector3.Zero();
         this._animate("dissolvePosition", mesh, "position", totalFrame, initialPosition, this._randomVector3(-0.5, 0.5));
         this._animate("dissolveRotation", mesh, "rotation", totalFrame, BABYLON.Vector3.Zero(), this._randomVector3(0, Math.PI * 2));
-        this._animate("dissolveScaling", mesh, "scaling", totalFrame, BABYLON.Vector3.One(), this._randomVector3(0.2, 2));
+        this._animate("dissolveScaling", mesh, "scaling", totalFrame, mesh.metadata.initialScale, this._randomVector3(0.2, 2));
       });
       this.tatoe.take.metadata.isDissolved = true;
     } else {
@@ -270,48 +194,6 @@ export default class Animation {
     }
   }
 
-  moveShape(shapeIndex: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 = 1) {
-    const totalFrame = 30;
-    const targets = [
-      this.tatoe.shapeTa1,
-      this.tatoe.shapeTa2,
-      this.tatoe.shapeTa3,
-      this.tatoe.shapeTo1,
-      this.tatoe.shapeTo2,
-      this.tatoe.shapeE1,
-      this.tatoe.shapeE2,
-      this.tatoe.shapeE3,
-    ];
-    const target = targets[shapeIndex];
-
-    if (!target.metadata.isAffected) {
-      this._animate("scaleShape", target, "scaling", totalFrame, target.scaling, this._randomVector3(0.1, 3));
-      this._animate("rotateShape", target, "rotation", totalFrame, target.rotation, this._randomVector3(Math.PI * -2, Math.PI * 2));
-      target.metadata.isAffected = true;
-    } else {
-      this._animate("scaleShape", target, "scaling", totalFrame, target.scaling, BABYLON.Vector3.One());
-      this._animate("rotateShape", target, "rotation", totalFrame, target.rotation, BABYLON.Vector3.Zero());
-      target.metadata.isAffected = false;
-    }
-  }
-
-  rotateHat() {
-    const totalFrame = 15;
-    const target = this.tatoe.eriHat;
-
-    if (!target.metadata.isRotated) {
-      this._animate("scaleHat", target, "scaling", totalFrame, target.scaling, new BABYLON.Vector3(1.2, 1.2, 1.2));
-      this._animate("rotateHat", target, "rotation.y", totalFrame, target.rotation.y, Math.PI * 2);
-      this._animate("moveHat", target, "position.y", totalFrame, target.position.y, 0.3);
-      target.metadata.isRotated = true;
-    } else {
-      this._animate("scaleHat", target, "scaling", totalFrame, target.scaling, BABYLON.Vector3.One());
-      this._animate("rotateHat", target, "rotation.y", totalFrame, target.rotation.y, 0);
-      this._animate("moveHat", target, "position.y", totalFrame, target.position.y, 0);
-      target.metadata.isRotated = false;
-    }
-  }
-
   rotateLips() {
     const totalFrame = 15;
     const lipTop = this.tatoe.takeLipTop;
@@ -331,14 +213,12 @@ export default class Animation {
   rotateTatoe() {
     const totalFrame = 15;
     const take = this.tatoe.take;
-    const eri = this.tatoe.eri;
 
     this._animate("rotateTake", take, "rotation", totalFrame, take.rotation, this._randomVector3(0, Math.PI * 2));
-    this._animate("rotateEri", eri, "rotation", totalFrame, eri.rotation, this._randomVector3(0, Math.PI * 2));
   }
 
   showWireframes() {
-    const childMeshes = this.tatoe.take.getChildMeshes().concat(this.tatoe.eri.getChildMeshes());
+    const childMeshes = this.tatoe.take.getChildMeshes();
 
     if (!this.tatoe.take.metadata.isWireframed) {
       childMeshes.forEach((mesh) => {
@@ -357,38 +237,13 @@ export default class Animation {
   shrinkHeads() {
     const totalFrame = 7;
     const takeHead = this.tatoe.takeHead;
-    const eriHead = this.tatoe.eriHead;
 
     if (!this.tatoe.takeHead.metadata.isShrinked) {
       this._animate("shrinkTakeHead", takeHead, "scaling", totalFrame, this.tatoe.takeHead.scaling, BABYLON.Vector3.Zero());
-      this._animate("shrinkEriHead", eriHead, "scaling", totalFrame, this.tatoe.eriHead.scaling, BABYLON.Vector3.Zero());
       this.tatoe.takeHead.metadata.isShrinked = true;
     } else {
       this._animate("unshrinkTakeHead", takeHead, "scaling", totalFrame, this.tatoe.takeHead.scaling, BABYLON.Vector3.One());
-      this._animate("unshrinkEriHead", eriHead, "scaling", totalFrame, this.tatoe.eriHead.scaling, BABYLON.Vector3.One());
       this.tatoe.takeHead.metadata.isShrinked = false;
-    }
-  }
-
-  swapEyes() {
-    const glasses = new BABYLON.TransformNode("glasses", this.scene);
-    this.tatoe.takeGlassL.parent = glasses;
-    this.tatoe.takeGlassR.parent = glasses;
-    this.tatoe.takeGlassFrame.parent = glasses;
-
-    if (!this.tatoe.eriEyes.metadata.isSwapped) {
-      glasses.parent = this.tatoe.eri;
-      glasses.position.y = -0.05;
-      this.tatoe.eriEyes.parent = this.tatoe.take;
-      this.tatoe.eriEyes.position.y = 0.05;
-      this.tatoe.eriEyes.position.z = -0.015;
-      this.tatoe.eriEyes.metadata.isSwapped = true;
-    } else {
-      glasses.parent = this.tatoe.take;
-      glasses.position.y = 0;
-      this.tatoe.eriEyes.parent = this.tatoe.eri;
-      this.tatoe.eriEyes.position = BABYLON.Vector3.Zero();
-      this.tatoe.eriEyes.metadata.isSwapped = false;
     }
   }
 
@@ -414,41 +269,16 @@ export default class Animation {
 
   reset() {
     this.tatoe.take.rotation = BABYLON.Vector3.Zero();
-    this.tatoe.eri.rotation = BABYLON.Vector3.Zero();
 
     this.tatoe.takeHead.metadata.isShrinked = false;
     this.tatoe.takeHead.scaling = BABYLON.Vector3.One();
-    this.tatoe.eriHead.scaling = BABYLON.Vector3.One();
 
     this.tatoe.takeGlassL.metadata.isExtended = false;
     this.tatoe.takeGlassL.scaling.z = 1;
     this.tatoe.takeGlassR.scaling.z = 1;
 
-    this.tatoe.eriHat.metadata.isRotated = false;
-    this.tatoe.eriHat.position.y = 0;
-    this.tatoe.eriHat.scaling = BABYLON.Vector3.One();
-    this.tatoe.eriHat.rotation.y = 0;
-
     this.tatoe.take.metadata.isDissolved = true;
     this.dissolve();
-
-    const shapeMeshes = [
-      this.tatoe.shapeTa1,
-      this.tatoe.shapeTa2,
-      this.tatoe.shapeTa3,
-      this.tatoe.shapeTo1,
-      this.tatoe.shapeTo2,
-      this.tatoe.shapeE1,
-      this.tatoe.shapeE2,
-      this.tatoe.shapeE3,
-    ];
-    shapeMeshes.forEach((mesh) => {
-      this._animate("resetShape", mesh, "scaling", 10, mesh.scaling, BABYLON.Vector3.One());
-      this._animate("resetShape", mesh, "rotation", 10, mesh.rotation, BABYLON.Vector3.Zero());
-    });
-
-    this.tatoe.eriEyes.metadata.isSwapped = true;
-    this.swapEyes();
 
     this.tatoe.take.metadata.isWireframed = true;
     this.showWireframes();

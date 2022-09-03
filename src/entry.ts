@@ -1,5 +1,3 @@
-import "@babylonjs/core/Debug/debugLayer";
-import "@babylonjs/inspector";
 import Tatoe from "./tatoe"
 import Animation from "./animation"
 import * as BABYLON from "@babylonjs/core";
@@ -30,18 +28,6 @@ class App {
     const tatoe = new Tatoe(scene);
     const animation = new Animation(tatoe, scene, camera, engine);
 
-    // hide/show the Inspector
-    window.addEventListener("keydown", (ev) => {
-      // Shift+Ctrl+Alt+I
-      if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.code === "KeyI") {
-        if (scene.debugLayer.isVisible()) {
-          scene.debugLayer.hide();
-        } else {
-          scene.debugLayer.show();
-        }
-      }
-    });
-
     const onResize = () => {
       const zoom = 4;
       const rect = engine.getRenderingCanvasClientRect();
@@ -57,7 +43,7 @@ class App {
     // run the main render loop
     engine.runRenderLoop(() => {
       scene.render();
-      camera.alpha += 0.005;
+      camera.alpha += 0.01;
     });
 
   }
