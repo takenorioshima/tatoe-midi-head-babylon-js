@@ -1,5 +1,4 @@
 import * as BABYLON from '@babylonjs/core'
-import { refractionPixelShader } from '@babylonjs/core/Shaders/refraction.fragment';
 import { NormalMaterial } from '@babylonjs/materials'
 import Tatoe from './tatoe'
 
