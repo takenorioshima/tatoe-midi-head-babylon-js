@@ -9,7 +9,7 @@ class App {
     canvas.style.width = "100%";
     canvas.style.height = "100%";
     canvas.id = "main-canvas";
-    document.body.appendChild(canvas);
+    document.getElementById("hero-unit").appendChild(canvas);
 
     // initialize babylon scene and engine
     const engine = new BABYLON.Engine(canvas, true);
@@ -22,6 +22,15 @@ class App {
     camera.setTarget(BABYLON.Vector3.Zero());
     camera.attachControl(canvas, true);
     camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
+
+    // post processing   
+    var curve = new BABYLON.ColorCurves();
+    curve.globalHue = 80;
+    curve.globalDensity = 60;
+    curve.globalSaturation = 10;
+    scene.imageProcessingConfiguration.colorCurvesEnabled = true;
+    scene.imageProcessingConfiguration.colorCurves = curve;
+    const colorPostProcess = new BABYLON.ImageProcessingPostProcess("processing", 1.0, camera);
 
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, -1), scene);
 
