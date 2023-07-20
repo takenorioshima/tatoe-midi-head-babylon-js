@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "dev": "vite",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {},
@@ -17,5 +18,12 @@
     "typescript": "^5.0.4",
     "vite": "^4.4.4",
     "webmidi": "3.1.5"
-  }
+  },
+  "name": "tatoe-midi-head-babylon-js",
+  "version": "1.0.0",
+  "main": "src/entry.ts",
+  "repository": "https://github.com/takenorioshima/tatoe-midi-head-babylon-js.git",
+  "author": "Takenori Oshima <takenorioshima@gmail.com>",
+  "license": "MIT",
+  "private": true
 }
