@@ -15,6 +15,7 @@
     "gh-pages": "^5.0.0",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
+    "vite": "^4.4.4",
     "webmidi": "3.1.5"
   }
 }
