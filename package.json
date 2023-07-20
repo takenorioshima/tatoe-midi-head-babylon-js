@@ -1,7 +1,5 @@
 {
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server --port 8080",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {},
